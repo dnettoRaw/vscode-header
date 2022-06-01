@@ -1,0 +1,69 @@
+{
+  "name": "dr-header",
+  "displayName": "dnettoRaw Header",
+  "description": "dnettoRaw header for VSCode : www.dnettoraw.dev",
+  "version": "0.0.1",
+  "publisher": "dnettoRaw",
+  "icon": "dnettoRaw.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dnettoRaw/vscode-header"
+  },
+  "bugs": {
+    "url": "https://github.com/dnettoRaw/vscode-header/issues"
+  },
+  "homepage": "https://github.com/dnettoRaw/vscode-header",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.6.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "configuration": {
+      "properties": {
+        "header.username": {
+          "type": "string",
+          "description": "Username to use in headers"
+        },
+        "header.email": {
+          "type": "string",
+          "description": "Email address to use in headers"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "header.insertHeader",
+        "title": "Insert header",
+        "when": "editorTextFocus"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "header.insertHeader",
+        "key": "ctrl+alt+h",
+        "mac": "cmd+alt+h",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.45",
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0"
+  },
+  "dependencies": {
+    "moment": "^2.15.0"
+  }
+}
