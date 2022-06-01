@@ -61,7 +61,7 @@
   "devDependencies": {
     "@types/node": "^6.0.45",
     "typescript": "^2.0.3",
-    "vscode": "^1.0.0"
+    "vscode": "^1.1.37"
   },
   "dependencies": {
     "moment": "^2.15.0"

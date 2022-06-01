@@ -25,6 +25,7 @@ export type HeaderInfo = {
 /**
  * Template where each field name is prefixed by $ and is padded with _
  */
+
 const genericTemplate = `
 ********************************************************************************
 *                                                                              *
