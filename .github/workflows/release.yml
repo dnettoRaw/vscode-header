@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
+      - run: npm run vs:compile
       - name: Publish to Open VSX Registry
         uses: HaaLeo/publish-vscode-extension@v1
         with:
