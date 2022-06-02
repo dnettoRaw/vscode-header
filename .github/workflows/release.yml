@@ -1,10 +1,9 @@
-name: Test
+name: Deploy Extension
 on:
   push:
     branches:
       - release
 
-name: Deploy Extension
 jobs:
   deploy:
     runs-on: ubuntu-latest
