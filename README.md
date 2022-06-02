@@ -2,7 +2,7 @@
   src="https://raw.githubusercontent.com/dnettoRaw/vscode-header/master/dnettoRaw.png" 
   width=128>
 
-# 42 Header for VSCode
+# Header for VSCode
 
 This extension provides the header integration in VS Code.
 
@@ -14,14 +14,16 @@ This extension provides the header integration in VS Code.
 #                                                        ###          ###      #
 #    By: dnettoRaw <hello@dnettoraw.dev>                ##    ##  ##    ##     #
 #                                                             ##  ##           #
-#    desc:                                                    ##  ##           #
-#                                                                              #
+#    desc: "even if you don't believe them,                   ##  ##           #
+#           they believe you." -A demon told me                                #
 #                                                       ##    ##  ##   ##      #
 #    Created: 2013/11/18 13:37:42 by dnettoRaw           ###  ######  ###      #
 #    Updated: 2016/09/18 13:11:04 by dnettoRaw            #####   #####        #
 #                                                                              #
 # **************************************************************************** #
 ```
+
+
 
 ## Install
 
@@ -52,7 +54,15 @@ To override these values, specify these properties in *User Settings* :
 }
 ```
 
-
+# todo
+[x] file name
+[x] creator name
+[x] modifier name
+[x] creation date
+[x] modifcation date
+[ ] custon logo by user
+[ ] observation plage
+[ ] web site 
 ## Issues
 
 In case of a bug, or missing feature, please create a [Github Pull Request](https://github.com/dnettoRaw/vscode-header/pulls).
@@ -60,3 +70,6 @@ In case of a bug, or missing feature, please create a [Github Pull Request](http
 ## License
 
 MIT
+
+## credits 
+[kube](https://github.com/kube)

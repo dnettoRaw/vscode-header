@@ -2,7 +2,7 @@
   "name": "dr-header",
   "displayName": "dnettoRaw Header",
   "description": "dnettoRaw header for VSCode : www.dnettoraw.dev",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "publisher": "dnettoRaw",
   "icon": "dnettoRaw.png",
   "repository": {
@@ -34,6 +34,10 @@
         "header.email": {
           "type": "string",
           "description": "Email address to use in headers"
+        },
+        "header.url": {
+          "type": "string",
+          "description": "User web site"
         }
       }
     },
@@ -55,6 +59,7 @@
   },
   "scripts": {
     "vscode:prepublish": "tsc -p ./",
+    "vs:compile": "vsce package ",
     "compile": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },

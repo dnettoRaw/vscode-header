@@ -1,5 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                            #####           */
+/*  header.ts                                              ############       */
+/*                                                       ###          ###     */
+/*  By: dnettoRaw <contact@dnetto.dev>                  ##    ##  ##    ##    */
+/*                                                            ##  ##          */
+/*  obs:[empty]                                                               */
+/*                                                      ##    ##  ##   ##     */
+/*                                                       ###  ######  ###     */
+/*  Created: 2022/06/02 11:45:59 by dnettoRaw             #####    ####       */
+/*  Updated: 2022/06/02 11:54:02 by dnettoRaw                                 */
+/*                                                    https://dnetto.dev      */
+/* ************************************************************************** */
 
- //         #####          //  
+
+//          #####          //  
  //      ############      //    
  //    ###          ###    //    
  //   ##    ##  ##    ##   //    
@@ -19,7 +34,11 @@ export type HeaderInfo = {
   createdBy: string,
   createdAt: moment.Moment,
   updatedBy: string,
-  updatedAt: moment.Moment
+  updatedAt: moment.Moment,
+  url: string,
+  obs1: string,
+  obs2: string,
+  obs3: string
 }
 
 /**
@@ -29,17 +48,17 @@ export type HeaderInfo = {
 const genericTemplate = `
 ********************************************************************************
 *                                                                              *
-*                                                             #####            *
-*   $FILENAME__________________________________            ############        *
-*                                                        ###          ###      *
-*   By: $AUTHOR________________________________         ##    ##  ##    ##     *
-*                                                             ##  ##           *
-*   obs:[empty]                                               ##  ##           *
-*                                                                              *
-*                                                       ##    ##  ##   ##      *
-*   Created: $CREATEDAT_________ by $CREATEDBY_          ###  ######  ###      *
-*   Updated: $UPDATEDAT_________ by $UPDATEDBY_           #####   #####        *
-*                                                                              *
+*   $FILENAME__________________________________               #####            *
+*                                                          ############        *
+*   By: $AUTHOR________________________________          ###          ###      *
+*                                                       ##    ##  ##    ##     *
+*   obs: $OBS1_________________________________               ##  ##           *
+*        $OBS1_________________________________                                *
+*        $OBS1_________________________________         ##    ##  ##   ##      *
+*                                                        ###  ######  ###      *
+*   Created: $CREATEDAT_________ by $CREATEDBY_           #####    ####        *
+*   Updated: $UPDATEDAT_________ by $UPDATEDBY_                                *
+*                                                     $URL____________________ *
 ********************************************************************************
 
 `.substring(1)
@@ -127,7 +146,11 @@ export const getHeaderInfo = (header: string): HeaderInfo => ({
   createdBy: getFieldValue(header, 'CREATEDBY'),
   createdAt: parseDate(getFieldValue(header, 'CREATEDAT')),
   updatedBy: getFieldValue(header, 'UPDATEDBY'),
-  updatedAt: parseDate(getFieldValue(header, 'UPDATEDAT'))
+  updatedAt: parseDate(getFieldValue(header, 'UPDATEDAT')),
+  url: getFieldValue(header, 'URL'),
+  obs1: getFieldValue(header, 'OBS1'), 
+  obs2: getFieldValue(header, 'OBS2'),
+  obs3: getFieldValue(header, 'OBS3')  
 })
 
 /**
@@ -139,7 +162,11 @@ export const renderHeader = (languageId: string, info: HeaderInfo) => [
   { name: 'CREATEDAT', value: formatDate(info.createdAt) },
   { name: 'CREATEDBY', value: info.createdBy },
   { name: 'UPDATEDAT', value: formatDate(info.updatedAt) },
-  { name: 'UPDATEDBY', value: info.updatedBy }
+  { name: 'UPDATEDBY', value: info.updatedBy },
+  { name: 'URL', value: info.url },
+  { name: 'OBS1', value: info.obs1},  
+  { name: 'OBS2', value: info.obs2},
+  { name: 'OBS3', value: info.obs3}  
 ].reduce((header, field) =>
   setFieldValue(header, field.name, field.value),
   getTemplate(languageId))

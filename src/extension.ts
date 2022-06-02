@@ -1,14 +1,3 @@
- 
- //         #####          //  
- //      ############      //    
- //    ###          ###    //    
- //   ##    ##  ##    ##   //    
- //         ##  ##         //    
- //         ##  ##         //    
- //                        //    
- //   ##    ##  ##   ##    //    
- //    ###  ######  ###    //  
- //     #####   #####      //  
 
 import { basename } from 'path'
 import vscode = require('vscode')
@@ -38,12 +27,22 @@ const getCurrentUserMail = () =>
     .get('header.email') || `${getCurrentUser()}@dnetto.dev`
 
 /**
+ * Return current user from config or ENV by default
+ */
+const getCurrentUrl = () =>
+vscode.workspace.getConfiguration()
+  .get('header.url') || process.env['URL'] || 'dnetto.dev'
+
+
+
+/**
  * Update HeaderInfo with last update author and date, and update filename
  * Returns a fresh new HeaderInfo if none was passed
  */
 const newHeaderInfo = (document: TextDocument, headerInfo?: HeaderInfo) => {
   const user = getCurrentUser()
   const mail = getCurrentUserMail()
+  const _url = getCurrentUrl()
 
   return Object.assign({},
     // This will be overwritten if headerInfo is not null
@@ -56,7 +55,8 @@ const newHeaderInfo = (document: TextDocument, headerInfo?: HeaderInfo) => {
       filename: basename(document.fileName),
       author: `${user} <${mail}>`,
       updatedBy: user,
-      updatedAt: moment()
+      updatedAt: moment(),
+      url: _url
     }
   )
 }
@@ -74,7 +74,7 @@ const insertHeaderHandler = () => {
 
       if (currentHeader)
         editor.replace(
-          new Range(0, 0, 12, 0),
+          new Range(0, 0, 15, 0),
           renderHeader(
             document.languageId,
             newHeaderInfo(document, getHeaderInfo(currentHeader))
@@ -108,7 +108,7 @@ const startUpdateOnSaveWatcher = (subscriptions: vscode.Disposable[]) =>
         supportsLanguage(document.languageId) && currentHeader ?
           [
             TextEdit.replace(
-              new Range(0, 0, 12, 0),
+              new Range(0, 0, 15, 0),
               renderHeader(
                 document.languageId,
                 newHeaderInfo(document, getHeaderInfo(currentHeader))
