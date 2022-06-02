@@ -56,6 +56,8 @@ To override these values, specify these properties in *User Settings* :
  - [x] observation 
    - [ ] observation show dialog in insert header
  - [x] web site 
+   - [ ] auto add https
+   - [ ] fix for very long sites url
  - [x] workflow publish relase
 
 ## Issues
