@@ -8,18 +8,18 @@ This extension provides the header integration in VS Code.
 
 ```bash
 # **************************************************************************** #
-#                                                                              #
-#                                                             #####            #
-#    vscode-header                                         ############        #
-#                                                        ###          ###      #
-#    By: dnettoRaw <hello@dnettoraw.dev>                ##    ##  ##    ##     #
-#                                                             ##  ##           #
-#    desc: "even if you don't believe them,                   ##  ##           #
-#           they believe you." -A demon told me                                #
-#                                                       ##    ##  ##   ##      #
-#    Created: 2013/11/18 13:37:42 by dnettoRaw           ###  ######  ###      #
-#    Updated: 2016/09/18 13:11:04 by dnettoRaw            #####   #####        #
-#                                                                              #
+#                                                                             */
+#    vscode-header                                            #####           */
+#                                                          ############       */
+#    By: dnettoRaw <hello@dnettoraw.dev>                 ###          ###     */
+#                                                       ##    ##  ##    ##    */
+#    obs: "even if you don't believe them,                    ##  ##          */
+#          they believe you."                                                 */
+#                        -A demon told me               ##    ##  ##   ##     */
+#                                                        ###  ######  ###     */
+#    Created: 2013/11/18 13:37:42 by dnettoRaw            #####    ####       */
+#    Updated: 2016/09/18 13:11:04 by dnettoRaw                                */
+#                                                     dnetto.dev              */
 # **************************************************************************** #
 ```
 
@@ -55,14 +55,16 @@ To override these values, specify these properties in *User Settings* :
 ```
 
 # todo
-[x] file name
-[x] creator name
-[x] modifier name
-[x] creation date
-[x] modifcation date
-[ ] custon logo by user
-[ ] observation plage
-[ ] web site 
+ - [x] file name
+ - [x] creator name
+ - [x] modifier name
+ - [x] creation date
+ - [x] modifcation date
+ - [ ] custon logo by user
+ - [x] observation 
+   - [ ] observation show dialog in insert header
+ - [x] web site 
+
 ## Issues
 
 In case of a bug, or missing feature, please create a [Github Pull Request](https://github.com/dnettoRaw/vscode-header/pulls).

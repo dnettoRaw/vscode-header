@@ -1,74 +1,75 @@
 {
-  "name": "dr-header",
-  "displayName": "dnettoRaw Header",
-  "description": "dnettoRaw header for VSCode : www.dnettoraw.dev",
-  "version": "0.1.1",
-  "publisher": "dnettoRaw",
-  "icon": "dnettoRaw.png",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dnettoRaw/vscode-header"
-  },
-  "bugs": {
-    "url": "https://github.com/dnettoRaw/vscode-header/issues"
-  },
-  "homepage": "https://github.com/dnettoRaw/vscode-header",
-  "license": "MIT",
-  "engines": {
-    "vscode": "^1.6.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "*"
-  ],
-  "main": "./out/src/extension",
-  "contributes": {
-    "configuration": {
-      "properties": {
-        "header.username": {
-          "type": "string",
-          "description": "Username to use in headers"
-        },
-        "header.email": {
-          "type": "string",
-          "description": "Email address to use in headers"
-        },
-        "header.url": {
-          "type": "string",
-          "description": "User web site"
-        }
-      }
+    "name": "dr-header",
+    "displayName": "dnettoRaw Header",
+    "description": "dnettoRaw header for VSCode : www.dnetto.dev",
+    "version": "0.1.9",
+    "publisher": "dnettoRaw",
+    "icon": "dnettoRaw.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dnettoRaw/vscode-header"
     },
-    "commands": [
-      {
-        "command": "header.insertHeader",
-        "title": "Insert header",
-        "when": "editorTextFocus"
-      }
+    "bugs": {
+        "url": "https://github.com/dnettoRaw/vscode-header/issues"
+    },
+    "homepage": "https://github.com/dnettoRaw/vscode-header",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.6.0"
+    },
+    "categories": [
+        "Other"
     ],
-    "keybindings": [
-      {
-        "command": "header.insertHeader",
-        "key": "ctrl+alt+h",
-        "mac": "cmd+alt+h",
-        "when": "editorTextFocus"
-      }
-    ]
-  },
-  "scripts": {
-    "vscode:prepublish": "tsc -p ./",
-    "vs:compile": "vsce package ",
-    "compile": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install"
-  },
-  "devDependencies": {
-    "@types/node": "^6.0.45",
-    "typescript": "^2.0.3",
-    "vscode": "^1.1.37"
-  },
-  "dependencies": {
-    "moment": "^2.15.0"
-  }
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "configuration": {
+            "properties": {
+                "header.username": {
+                    "type": "string",
+                    "description": "Username to use in headers"
+                },
+                "header.email": {
+                    "type": "string",
+                    "description": "Email address to use in headers"
+                },
+                "header.url": {
+                    "type": "string",
+                    "description": "User web site"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "header.insertHeader",
+                "title": "Insert header",
+                "when": "editorTextFocus"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "header.insertHeader",
+                "key": "ctrl+alt+h",
+                "mac": "cmd+alt+h",
+                "when": "editorTextFocus"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "vs:compile": "npx auto-version ; vsce package ",
+        "compile": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "@types/node": "^6.0.45",
+        "auto-version-js": "^0.3.10",
+        "typescript": "^2.0.3",
+        "vscode": "^1.1.37"
+    },
+    "dependencies": {
+        "moment": "^2.15.0"
+    }
 }

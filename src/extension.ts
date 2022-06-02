@@ -1,4 +1,3 @@
-
 import { basename } from 'path'
 import vscode = require('vscode')
 import moment = require('moment')
@@ -48,7 +47,10 @@ const newHeaderInfo = (document: TextDocument, headerInfo?: HeaderInfo) => {
     // This will be overwritten if headerInfo is not null
     {
       createdAt: moment(),
-      createdBy: user
+      createdBy: user,
+      obs1: ' ',
+      obs2: ' ',
+      obs3: ' '
     },
     headerInfo,
     {
