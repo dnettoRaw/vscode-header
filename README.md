@@ -23,15 +23,6 @@ This extension provides the header integration in VS Code.
 # **************************************************************************** #
 ```
 
-
-
-## Install
-
-Launch Quick Open with <kbd>⌘</kbd>+<kbd>P</kbd> and enter
-```
-ext install header
-```
-
 ## Usage
 
 ### Insert a header
@@ -50,7 +41,8 @@ To override these values, specify these properties in *User Settings* :
 ```ts
 {
   "header.username": string,
-  "header.email": string
+  "header.email": string,
+  "header.url" : string
 }
 ```
 
@@ -64,6 +56,7 @@ To override these values, specify these properties in *User Settings* :
  - [x] observation 
    - [ ] observation show dialog in insert header
  - [x] web site 
+ - [x] workflow publish relase
 
 ## Issues
 
