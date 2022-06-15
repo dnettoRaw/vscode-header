@@ -1,3 +1,11 @@
+//       #######
+//    ###       ###
+//   ##   ## ##   ##  F: extension.ts
+//        ## ##       P: vscode-header
+//                    C: 2022/06/14 18:12:45 by dnettoRaw
+//   ##   ## ##   ##  U: 2022/06/14 18:12:45 by dnettoRaw
+//     ###########
+
 import { basename } from 'path'
 import vscode = require('vscode')
 import moment = require('moment')

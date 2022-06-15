@@ -17,11 +17,28 @@ This extension provides the header integration in VS Code.
 #          they believe you."                                                 */
 #                        -A demon told me               ##    ##  ##   ##     */
 #                                                        ###  ######  ###     */
-#    Created: 2013/11/18 13:37:42 by dnettoRaw            #####    ####       */
-#    Updated: 2016/09/18 13:11:04 by dnettoRaw                                */
+#    Created: 2022/03/20 21:21:42 by dnettoRaw            #####    ####       */
+#    Updated: 2022/05/19 21:21:42 by dnettoRaw                                */
 #                                                     dnetto.dev              */
 # **************************************************************************** #
 ```
+
+### soon little version for deps files
+```bash
+#       #######
+#    ###       ###
+#   ##   ## ##   ##  F: vscode-header.js
+#        ## ##       P: vscode-header
+#                    C: 2022/03/20 21:21:42 by dnettoRaw
+#   ##   ## ##   ##  U: 2022/05/19 21:21:42 by dnettoRaw
+#     ###########
+```
+|||
+|-|-|
+|F| file name|
+|P| project name|
+|C| created at|
+|U| updated at|
 
 ## Usage
 
@@ -59,6 +76,7 @@ To override these values, specify these properties in *User Settings* :
    - [ ] auto add https
    - [ ] fix for very long sites url
  - [x] workflow publish relase
+ - [ ] little version off header
 
 ## Issues
 
