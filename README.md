@@ -1,7 +1,7 @@
-<img
-  src="https://raw.githubusercontent.com/dnettoRaw/vscode-header/master/dnettoRaw.png" 
-  width=128>
-
+<h1 align="center"><img
+  src="https://raw.githubusercontent.com/dnettoRaw/vscode-header/master/img/logo.png" 
+  width=200></h1>
+  
 # Header for VSCode
 
 This extension provides the header integration in VS Code.

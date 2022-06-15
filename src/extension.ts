@@ -7,8 +7,11 @@ import {
 } from 'vscode'
 
 import {
-  extractHeader, getHeaderInfo, renderHeader,
-  supportsLanguage, HeaderInfo
+  extractHeader, extractLittleHeader,
+  getHeaderInfo, getLittleHeaderInfo,
+  renderHeader, renderLittleHeader,
+  HeaderInfo, littleHeaderInfo,
+  supportsLanguage, 
 } from './header'
 
 /**
@@ -32,6 +35,14 @@ const getCurrentUrl = () =>
 vscode.workspace.getConfiguration()
   .get('header.url') || process.env['URL'] || 'dnetto.dev'
 
+/**
+ * Return current project name found in package.json, or standalone by default
+ */
+ const getCurrentProject = () => {
+  // let t = vscode.workspace.findFiles('package.json','**∕**',1)
+  return ' '
+  //  .get('header.url') || 'standalone'
+ }
 
 
 /**
@@ -59,6 +70,26 @@ const newHeaderInfo = (document: TextDocument, headerInfo?: HeaderInfo) => {
       updatedBy: user,
       updatedAt: moment(),
       url: _url
+    }
+  )
+}
+
+const newLittleHeaderInfo = (document: TextDocument, headerInfo?: littleHeaderInfo) => {
+  const user = getCurrentUser();
+  const _project = getCurrentProject();
+
+  return Object.assign({},
+    // This will be overwritten if headerInfo is not null
+    {
+      createdAt: moment(),
+      createdBy: user,
+    },
+    headerInfo,
+    {
+      filename: basename(document.fileName),
+      project: _project,
+      updatedBy: user,
+      updatedAt: moment(),
     }
   )
 }
@@ -96,6 +127,67 @@ const insertHeaderHandler = () => {
       `No header support for language ${document.languageId}`
     )
 }
+const insertLittleHeaderHandler = () => {
+  const { activeTextEditor } = vscode.window
+  const { document } = activeTextEditor
+
+  if (supportsLanguage(document.languageId))
+    activeTextEditor.edit(editor => {
+      const currentHeader = extractLittleHeader(document.getText())
+
+      if (currentHeader)
+        editor.replace(
+          new Range(0, 0, 9, 0),
+          renderLittleHeader(
+            document.languageId,
+            newLittleHeaderInfo(document, getLittleHeaderInfo(currentHeader))
+          )
+        )
+      else
+        editor.insert(
+          new Position(0, 0),
+          renderLittleHeader(
+            document.languageId,
+            newLittleHeaderInfo(document)
+          )
+        )
+    })
+  else
+    vscode.window.showInformationMessage(
+      `No header support for language ${document.languageId}`
+    )
+}
+
+// const insertOnlyLogoHeaderHandler = () => {
+//   const { activeTextEditor } = vscode.window
+//   const { document } = activeTextEditor
+
+//   if (supportsLanguage(document.languageId))
+//     activeTextEditor.edit(editor => {
+//       const currentHeader = extracteLogoHeader(document.getText())
+
+//       if (currentHeader)
+//         editor.replace(
+//           new Range(0, 0, 9, 0),
+//           renderLittleHeader(
+//             document.languageId,
+//             newLittleHeaderInfo(document, getLittleHeaderInfo(currentHeader))
+//           )
+//         )
+//       else
+//         editor.insert(
+//           new Position(0, 0),
+//           renderLittleHeader(
+//             document.languageId,
+//             newLittleHeaderInfo(document)
+//           )
+//         )
+//     })
+//   else
+//     vscode.window.showInformationMessage(
+//       `No header support for language ${document.languageId}`
+//     )
+// }
 
 /**
  * Start watcher for document save to update current header
@@ -104,6 +196,7 @@ const startUpdateOnSaveWatcher = (subscriptions: vscode.Disposable[]) =>
   vscode.workspace.onWillSaveTextDocument(event => {
     const document = event.document
     const currentHeader = extractHeader(document.getText())
+    const currentLHeader = extractLittleHeader(document.getText())
 
     event.waitUntil(
       Promise.resolve(
@@ -116,8 +209,18 @@ const startUpdateOnSaveWatcher = (subscriptions: vscode.Disposable[]) =>
                 newHeaderInfo(document, getHeaderInfo(currentHeader))
               )
             )
+          ] :[]? 
+        supportsLanguage(document.languageId) && currentLHeader ?
+          [
+            TextEdit.replace(
+              new Range(0, 0, 8, 0),
+              renderLittleHeader(
+                document.languageId,
+                newLittleHeaderInfo(document, getLittleHeaderInfo(currentLHeader))
+              )
+            )
           ]
-          : [] // No TextEdit to apply
+          :[]:[]// No TextEdit to apply
       )
     )
   },
@@ -128,7 +231,11 @@ const startUpdateOnSaveWatcher = (subscriptions: vscode.Disposable[]) =>
 export const activate = (context: vscode.ExtensionContext) => {
   const disposable = vscode.commands
     .registerTextEditorCommand('header.insertHeader', insertHeaderHandler)
+  const littleHeader = vscode.commands
+    .registerTextEditorCommand('header.insertLittleHeader', insertLittleHeaderHandler)
+  // const onlylogo = vscode.commands
+    // .registerTextEditorCommand('header.insertOnlyLogoleHeader', insertOnlyLogoHeaderHandler)
 
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(disposable,littleHeader)
   startUpdateOnSaveWatcher(context.subscriptions)
 }

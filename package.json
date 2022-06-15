@@ -2,7 +2,7 @@
     "name": "dr-header",
     "displayName": "dnettoRaw Header",
     "description": "dnettoRaw header for VSCode : www.dnetto.dev",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "publisher": "dnettoRaw",
     "icon": "dnettoRaw.png",
     "repository": {
@@ -38,6 +38,10 @@
                 "header.url": {
                     "type": "string",
                     "description": "User web site"
+                },
+                "header.logo": {
+                    "type": "string",
+                    "description": "your logo in ascii art [soon]"
                 }
             }
         },
@@ -46,6 +50,16 @@
                 "command": "header.insertHeader",
                 "title": "Insert header",
                 "when": "editorTextFocus"
+            },
+            {
+                "command": "header.insertLittleHeader",
+                "title": "Insert little header",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "header.insertOnlyLogoleHeader",
+                "title": "Insert only your logo header",
+                "when": "editorTextFocus"
             }
         ],
         "keybindings": [
@@ -53,6 +67,18 @@
                 "command": "header.insertHeader",
                 "key": "ctrl+alt+h",
                 "mac": "cmd+alt+h",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "header.insertLittleHeader",
+                "key": "ctrl+alt+j",
+                "mac": "cmd+alt+j",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "header.insertOnlyLogoleHeader",
+                "key": "ctrl+alt+l",
+                "mac": "cmd+alt+l",
                 "when": "editorTextFocus"
             }
         ]
