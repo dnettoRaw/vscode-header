@@ -32,6 +32,7 @@ This extension provides the header integration in VS Code.
 #   ##   ## ##   ##  U: 2022/05/19 21:21:42 by dnettoRaw
 #     ###########
 ```
+
 |||
 |-|-|
 |F| file name|
@@ -81,6 +82,7 @@ To override these values, specify these properties in *User Settings* :
  - [x] little version of header
  - [ ] custon logo by user
  - [ ] versiion with only logo
+ - [ ] project fild 
  
 ## Issues
 
