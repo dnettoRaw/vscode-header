@@ -1,14 +1,11 @@
+/*      #######                                               */
+/*   ###       ###                                            */
+/*  ##   ## ##   ##   F: header.ts                            */
+/*       ## ##                                                */
+/*                    C: 2022/06/15 15:23:17 by:dnettoRaw     */
+/*  ##   ## ##   ##   U: 2022/06/15 15:23:34 by:dnettoRaw     */
+/*    ###########                                             */
 
- //         #####          //  
- //      ############      //    
- //    ###          ###    //    
- //   ##    ##  ##    ##   //    
- //         ##  ##         //    
- //         ##  ##         //    
- //                        //    
- //   ##    ##  ##   ##    //    
- //    ###  ######  ###    //  
- //     #####   #####      //  
 
 import moment = require('moment')
 import { languageDemiliters } from './delimiters'
@@ -106,7 +103,7 @@ const getLittleTemplate = (languageId: string) => {
   // Replace all delimiters with ones for current language
   return littleTemplate
     .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
-    left + '$2' + pad(' ',right.length))
+    left + '$2' + right) //pad(' ',right.length))
 }
 
 /**
