@@ -81,7 +81,8 @@ To override these values, specify these properties in *User Settings* :
  - [x] little version of header
  - [ ] custon logo by user
  - [ ] versiion with only logo
- 
+
+
 ## Issues
 
 In case of a bug, or missing feature, please create a [Github Pull Request](https://github.com/dnettoRaw/vscode-header/pulls).

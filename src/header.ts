@@ -55,6 +55,16 @@ const genericTemplate = `
 
 `.substring(1)
 
+const littleTemplate=`
+*       #######    
+*    ###       ### 
+*   ##   ## ##   ## F: $FILENAME__________________________
+*        ## ##      P: $PROJECT___________________________
+*                   C: $CREATEDAT_________ by:$CREATEDBY__
+*   ##   ## ##   ## U: $UPDATEDAT_________ by:$UPDATEDBY__
+*     ###########   
+`.substring(1)
+
 /**
  * Template where each field name is prefixed by $ and is padded with _
  */
