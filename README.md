@@ -45,6 +45,10 @@ This extension provides the header integration in VS Code.
  - **macOS** : <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>H</kbd>
  - **Linux** / **Windows** : <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>H</kbd>.
 
+### Insert a little header
+ - **macOS** : <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>j</kbd>
+ - **Linux** / **Windows** : <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>j</kbd>.
+
 Header is automatically updated on save.
 
 
@@ -68,14 +72,16 @@ To override these values, specify these properties in *User Settings* :
  - [x] modifier name
  - [x] creation date
  - [x] modifcation date
- - [ ] custon logo by user
  - [x] observation 
    - [ ] observation show dialog in insert header
  - [x] web site 
    - [ ] auto add https
    - [ ] fix for very long sites url
  - [x] workflow publish relase
- - [ ] little version off header
+ - [x] little version of header
+ - [ ] custon logo by user
+ - [ ] versiion with only logo
+
 
 ## Issues
 
