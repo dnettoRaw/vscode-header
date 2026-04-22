@@ -127,6 +127,20 @@ const getVSCodeLogo = () => [
   '     ::::::::::          '
 ]
 
+const getMaxLogo = () => [
+  '***********************',
+  '*                     *',
+  '*      MAX SIZE       *',
+  '*       23 x 11       *',
+  '*                     *',
+  '*                     *',
+  '*                     *',
+  '*                     *',
+  '*                     *',
+  '*                     *',
+  '***********************'
+]
+
 const getCustomLogo = () => {
   const config = vscode.workspace.getConfiguration()
   const customLogo = config.get('header.logo') as string
@@ -137,6 +151,7 @@ const getCustomLogo = () => {
   const logoType = config.get('header.logoType') as string
   if (logoType === 'linux') return getLinuxLogo()
   if (logoType === 'vscode') return getVSCodeLogo()
+  if (logoType === 'max') return getMaxLogo()
 
   return getDefaultLogo()
 }

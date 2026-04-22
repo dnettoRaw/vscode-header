@@ -67,7 +67,7 @@
                 "header.logoType": {
                     "type": "string",
                     "default": "default",
-                    "enum": ["default", "linux", "vscode"],
+                    "enum": ["default", "linux", "vscode", "max"],
                     "description": "Choose a built-in logo type"
                 }
             }
