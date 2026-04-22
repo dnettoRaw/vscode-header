@@ -10,6 +10,7 @@ suite('Header Extension Test Suite', () => {
 		assert.strictEqual(supportsLanguage('typescript'), true);
 		assert.strictEqual(supportsLanguage('javascript'), true);
 		assert.strictEqual(supportsLanguage('c'), true);
+		assert.strictEqual(supportsLanguage('rust'), true);
 		assert.strictEqual(supportsLanguage('nonexistent-lang'), false);
 	});
 
@@ -23,6 +24,9 @@ suite('Header Extension Test Suite', () => {
 
 		const cDelimiters = getLanguageDelimiters('c');
 		assert.deepStrictEqual(cDelimiters, ['// ', '']);
+
+		const rustDelimiters = getLanguageDelimiters('rust');
+		assert.deepStrictEqual(rustDelimiters, ['// ', '']);
 
 		// HTML still uses block comments
 		const htmlDelimiters = getLanguageDelimiters('html');

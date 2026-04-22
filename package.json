@@ -2,7 +2,7 @@
     "name": "dr-header",
     "displayName": "dnettoRaw Header",
     "description": "dnettoRaw header for VSCode : www.dnetto.dev",
-    "version": "0.3.2",
+    "version": "0.3.4",
     "publisher": "dnettoRaw",
     "icon": "dnettoRaw.png",
     "repository": {
