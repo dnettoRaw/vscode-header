@@ -63,8 +63,25 @@ To override these values, specify these properties in *User Settings* :
   "header.username": string,
   "header.email": string,
   "header.url" : string,
-  "header.autoInsert": boolean
+  "header.autoInsert": boolean,
+  "header.logoType": "default" | "linux" | "vscode" | "max",
+  "header.template": string,
+  "header.littleTemplate": string
 }
+```
+
+### Custom Templates Examples
+
+You can fully customize your header by providing a template string. Use placeholders like `$FILENAME`, `$AUTHOR`, `$CREATED`, `$UPDATED`, `$MAIL`, `$LICENSE`, `$URL`, and `$LOGO0` to `$LOGO10`.
+
+**Example Minimal Template:**
+```json
+"header.template": "/* $FILENAME\n * Created by: $USER on $CREATED\n * Contact: $MAIL\n */"
+```
+
+**Example Little Header Template:**
+```json
+"header.littleTemplate": "// $FILENAME - Project: $PROJECT\n// Last updated by $UPDATED"
 ```
 
 # todo

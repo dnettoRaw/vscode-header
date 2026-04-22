@@ -69,6 +69,16 @@
                     "default": "default",
                     "enum": ["default", "linux", "vscode", "max"],
                     "description": "Choose a built-in logo type"
+                },
+                "header.template": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Custom header template (use placeholders like $FILENAME, $AUTHOR, $LOGO0...)"
+                },
+                "header.littleTemplate": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Custom little header template (use placeholders like $FILENAME, $PROJECT, $LLOGO0...)"
                 }
             }
         },

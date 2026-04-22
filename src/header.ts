@@ -178,23 +178,31 @@ const applyTemplateChar = (template: string, left: string) => {
 }
 
 const getTemplate = (languageId: string) => {
+  const config = vscode.workspace.getConfiguration()
+  const customTemplate = config.get('header.template') as string
+  const baseTemplate = customTemplate || genericTemplate
+
   const delimiters = getLanguageDelimiters(languageId)
-  if (!delimiters) return genericTemplate
+  if (!delimiters) return baseTemplate
   const [left, right] = delimiters
   const width = left.length
 
-  return applyTemplateChar(genericTemplate, left)
+  return applyTemplateChar(baseTemplate, left)
     .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
       left + '$2' + right)
 }
 
 const getLittleTemplate = (languageId: string) => {
+  const config = vscode.workspace.getConfiguration()
+  const customTemplate = config.get('header.littleTemplate') as string
+  const baseTemplate = customTemplate || littleTemplate
+
   const delimiters = getLanguageDelimiters(languageId)
-  if (!delimiters) return littleTemplate
+  if (!delimiters) return baseTemplate
   const [left, right] = delimiters
   const width = left.length
 
-  return applyTemplateChar(littleTemplate, left)
+  return applyTemplateChar(baseTemplate, left)
     .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
       left + '$2' + right)
 }
@@ -254,19 +262,22 @@ export const extractLittleHeader = (text: string): string | null => {
  * Get value for given field name from header string by finding its position in the template
  */
 const getFieldValue = (header: string, name: string) => {
-  const template = genericTemplate
+  const config = vscode.workspace.getConfiguration()
+  const customTemplate = config.get('header.template') as string
+  const template = customTemplate || genericTemplate
+
   const match = template.match(new RegExp(`\\$${name}(?![0-9])_*`))
   if (!match) return ''
 
   const offset = template.indexOf(match[0])
-  // This only works if the header hasn't shifted too much.
-  // For a more robust solution, we'd need to search the header for the surrounding text.
-  // But for now, we'll use a simple heuristic.
   return header.substr(offset, match[0].length).trim()
 }
 
 const getLittleFieldValue = (header: string, name: string) => {
-  const template = littleTemplate
+  const config = vscode.workspace.getConfiguration()
+  const customTemplate = config.get('header.littleTemplate') as string
+  const template = customTemplate || littleTemplate
+
   const match = template.match(new RegExp(`\\$${name}(?![0-9])_*`))
   if (!match) return ''
   const offset = template.indexOf(match[0])
