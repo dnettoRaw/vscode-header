@@ -125,16 +125,18 @@
         "vscode:prepublish": "tsc -p ./",
         "vs:compile": "npx auto-version ; vsce package ",
         "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./out/src/test/runTest.js"
     },
     "devDependencies": {
         "@types/glob": "^8.1.0",
         "@types/mocha": "^10.0.10",
         "@types/node": "^6.0.45",
+        "@vscode/test-electron": "^2.5.2",
         "auto-version-js": "^0.3.10",
         "glob": "^13.0.6",
         "mocha": "^11.7.5",
-        "typescript": "^2.0.3",
+        "typescript": "^6.0.3",
         "vscode": "^1.1.37"
     },
     "dependencies": {

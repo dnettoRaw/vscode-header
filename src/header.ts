@@ -56,20 +56,10 @@ const genericTemplate = `
 ********************************************************************************
 `.substring(1)
 
-const littleTemplate=`
-*       #######    
-*    ###       ### 
-*   ##   ## ##   ## F: $FILENAME__________________________
-*        ## ##      P: $PROJECT___________________________
-*                   C: $CREATEDAT_________ by:$CREATEDBY__
-*   ##   ## ##   ## U: $UPDATEDAT_________ by:$UPDATEDBY__
-*     ###########   
-`.substring(1)
-
 /**
  * Template where each field name is prefixed by $ and is padded with _
  */
-const littleTemplate=`
+const littleTemplate = `
 *       #######                                                *
 *    ###       ###                                             *
 *   ##   ## ##   ##   F: $FILENAME___________________________  *
@@ -121,13 +111,23 @@ const getCustomLogo = () => {
   return getDefaultLogo()
 }
 
+/**
+ * Replaces template border characters based on delimiters
+ */
+const applyTemplateChar = (template: string, left: string) => {
+  if (left.startsWith('//')) {
+    return template.replace(/\*/g, '/')
+  }
+  return template
+}
+
 const getTemplate = (languageId: string) => {
   const delimiters = getLanguageDelimiters(languageId)
   if (!delimiters) return genericTemplate
   const [left, right] = delimiters
   const width = left.length
 
-  return genericTemplate
+  return applyTemplateChar(genericTemplate, left)
     .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
       left + '$2' + right)
 }
@@ -138,7 +138,7 @@ const getLittleTemplate = (languageId: string) => {
   const [left, right] = delimiters
   const width = left.length
 
-  return littleTemplate
+  return applyTemplateChar(littleTemplate, left)
     .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
       left + '$2' + right)
 }
@@ -149,7 +149,7 @@ const getLogoTemplate = (languageId: string) => {
   const [left, right] = delimiters
   const width = left.length
 
-  return logoTemplate
+  return applyTemplateChar(logoTemplate, left)
     .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
       left + '$2' + right)
 }
@@ -205,12 +205,16 @@ const fieldRegex = (name: string) =>
  * Get value for given field name from header string
  */
 const getFieldValue = (header: string, name: string) => {
-  const [_, offset, field] = genericTemplate.match(fieldRegex(name))
+  const match = genericTemplate.match(fieldRegex(name))
+  if (!match) return ''
+  const [_, offset, field] = match
 
   return header.substr(offset.length, field.length)
 }
 const getLittleFieldValue = (header: string, name: string) => {
-  const [_, offset, field] = littleTemplate.match(fieldRegex(name))
+  const match = littleTemplate.match(fieldRegex(name))
+  if (!match) return ''
+  const [_, offset, field] = match
 
   return header.substr(offset.length, field.length)
 }
@@ -219,14 +223,18 @@ const getLittleFieldValue = (header: string, name: string) => {
  * Set field value in header string
  */
 const setFieldValue = (header: string, name: string, value: string) => {
-  const [_, offset, field] = genericTemplate.match(fieldRegex(name))
+  const match = genericTemplate.match(fieldRegex(name))
+  if (!match) return header
+  const [_, offset, field] = match
 
   return header.substr(0, offset.length)
     .concat(pad(value, field.length))
     .concat(header.substr(offset.length + field.length))
 }
 const setLittleFieldValue = (header: string, name: string, value: string) => {
-  const [_, offset, field] = littleTemplate.match(fieldRegex(name))
+  const match = littleTemplate.match(fieldRegex(name))
+  if (!match) return header
+  const [_, offset, field] = match
 
   return header.substr(0, offset.length)
     .concat(pad(value, field.length))
@@ -266,7 +274,7 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
   const logo = getCustomLogo()
   const template = logoOnly ? getLogoTemplate(languageId) : getTemplate(languageId)
 
-  const fields = [
+  const fields: { name: string, value: string }[] = [
     { name: 'FILENAME', value: info.filename },
     { name: 'AUTHOR', value: info.author },
     { name: 'CREATEDAT', value: formatDate(info.createdAt) },

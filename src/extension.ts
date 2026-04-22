@@ -143,6 +143,7 @@ const newLittleHeaderInfo = (document: TextDocument, headerInfo?: littleHeaderIn
  */
 const insertHeaderHandler = async () => {
   const { activeTextEditor } = vscode.window
+  if (!activeTextEditor) return
   const { document } = activeTextEditor
 
   if (supportsLanguage(document.languageId)) {
@@ -187,6 +188,7 @@ const insertHeaderHandler = async () => {
 }
 const insertLittleHeaderHandler = () => {
   const { activeTextEditor } = vscode.window
+  if (!activeTextEditor) return
   const { document } = activeTextEditor
 
   if (supportsLanguage(document.languageId))
@@ -218,6 +220,7 @@ const insertLittleHeaderHandler = () => {
 
 const insertOnlyLogoHeaderHandler = () => {
   const { activeTextEditor } = vscode.window
+  if (!activeTextEditor) return
   const { document } = activeTextEditor
 
   if (supportsLanguage(document.languageId))

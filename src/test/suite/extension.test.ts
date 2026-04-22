@@ -1,12 +1,26 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
+import { supportsLanguage } from '../../header';
+import { getLanguageDelimiters } from '../../delimiters';
 
-suite('Extension Test Suite', () => {
+suite('Header Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
+	test('Language support detection', () => {
+		assert.strictEqual(supportsLanguage('typescript'), true);
+		assert.strictEqual(supportsLanguage('javascript'), true);
+		assert.strictEqual(supportsLanguage('c'), true);
+		assert.strictEqual(supportsLanguage('nonexistent-lang'), false);
+	});
+
+	test('Delimiter matching', () => {
+		const tsDelimiters = getLanguageDelimiters('typescript');
+		assert.deepStrictEqual(tsDelimiters, ['// ', ' //']);
+
+		const cDelimiters = getLanguageDelimiters('c');
+		assert.deepStrictEqual(cDelimiters, ['/* ', ' */']);
+
+		const htmlDelimiters = getLanguageDelimiters('html');
+		assert.deepStrictEqual(htmlDelimiters, ['<!-- ', ' -->']);
 	});
 });

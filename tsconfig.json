@@ -1,15 +1,23 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "outDir": "out",
     "lib": [
-      "es6"
+      "es6",
+      "dom"
+    ],
+    "types": [
+      "node",
+      "mocha",
+      "glob"
     ],
     "noImplicitAny": true,
     "removeComments": true,
     "sourceMap": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules",
