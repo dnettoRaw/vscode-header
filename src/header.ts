@@ -59,14 +59,15 @@ const genericTemplate = `
  * Template where each field name is prefixed by $ and is padded with _
  */
 const littleTemplate = `
-*       #######                                                *
-*    ###       ###                                             *
-*   ##   ## ##   ##   F: $FILENAME___________________________  *
-*        ## ##        $PROJECT_______________________________  *
-*                     C: $CREATEDAT_________ by:$CREATEDBY___  *
-*   ##   ## ##   ##   U: $UPDATEDAT_________ by:$UPDATEDBY___  *
-*     ###########                                              *
-
+********************************************************************************
+*  $LLOGO0________   F: $FILENAME_____________________________________________
+*  $LLOGO1________   P: $PROJECT______________________________________________
+*  $LLOGO2________   C: $CREATEDAT_________ by: $CREATEDBY____________________
+*  $LLOGO3________   U: $UPDATEDAT_________ by: $UPDATEDBY____________________
+*  $LLOGO4________
+*  $LLOGO5________
+*  $LLOGO6________
+********************************************************************************
 `.substring(1)
 
 /**
@@ -88,7 +89,17 @@ const logoTemplate = `
 
 /**
  * Get specific header template for languageId
+ * 
  */
+const getLittleLogo = () => [
+  '     #######     ',
+  '  ###       ###  ',
+  ' ##   ## ##   ## ',
+  '      ## ##      ',
+  '                 ',
+  ' ##   ## ##   ## ',
+  '   ###########   ',
+]
 const getDefaultLogo = () => [
   '         #####           ',
   '      ############       ',
@@ -329,6 +340,7 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
 }
 
 export const renderLittleHeader = (languageId: string, info: littleHeaderInfo) => {
+  const logo = getLittleLogo()
   let template = getLittleTemplate(languageId)
   const allFields: { [key: string]: string } = {
     FILENAME: info.filename,
@@ -337,6 +349,11 @@ export const renderLittleHeader = (languageId: string, info: littleHeaderInfo) =
     CREATEDBY: info.createdBy,
     UPDATEDAT: formatDate(info.updatedAt),
     UPDATEDBY: info.updatedBy,
+  }
+
+  // Add little logo lines
+  for (let i = 0; i < logo.length; i++) {
+    allFields[`LLOGO${i}`] = logo[i] || ' '
   }
 
   const keys = Object.keys(allFields).sort((a, b) => b.length - a.length)
