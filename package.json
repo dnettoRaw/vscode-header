@@ -71,7 +71,8 @@
                         "default",
                         "linux",
                         "vscode",
-                        "max"
+                        "max",
+                        "none"
                     ],
                     "description": "Choose a built-in logo type"
                 },

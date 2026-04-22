@@ -58,7 +58,7 @@
 
 ### 1. Built-in Logos
 You can quickly switch between built-in logos in your settings:
-- `header.logoType`: `default`, `linux`, `vscode`, `max`.
+- `header.logoType`: `default`, `linux`, `vscode`, `max`, `none` (no ASCII art).
 
 ### 2. Custom ASCII Art
 Paste your own ASCII art into `header.logo`.

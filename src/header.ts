@@ -91,15 +91,21 @@ const logoTemplate = `
  * Get specific header template for languageId
  * 
  */
-const getLittleLogo = () => [
-  '     #######     ',
-  '  ###       ###  ',
-  ' ##   ## ##   ## ',
-  '      ## ##      ',
-  '                 ',
-  ' ##   ## ##   ## ',
-  '   ###########   ',
-]
+const getLittleLogo = () => {
+  const config = vscode.workspace.getConfiguration()
+  const logoType = config.get('header.logoType') as string
+  if (logoType === 'none') return Array(7).fill(' '.repeat(17))
+
+  return [
+    '     #######     ',
+    '  ###       ###  ',
+    ' ##   ## ##   ## ',
+    '      ## ##      ',
+    '                 ',
+    ' ##   ## ##   ## ',
+    '   ###########   ',
+  ]
+}
 const getDefaultLogo = () => [
   '         #####           ',
   '      ############       ',
@@ -163,6 +169,7 @@ const getCustomLogo = () => {
   if (logoType === 'linux') return getLinuxLogo()
   if (logoType === 'vscode') return getVSCodeLogo()
   if (logoType === 'max') return getMaxLogo()
+  if (logoType === 'none') return Array(11).fill(' '.repeat(25))
 
   return getDefaultLogo()
 }
