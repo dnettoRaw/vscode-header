@@ -1,11 +1,12 @@
-/*      #######                                               */
-/*   ###       ###                                            */
-/*  ##   ## ##   ##   F: header.ts                            */
-/*       ## ##                                                */
-/*                    C: 2022/06/15 15:23:17 by:dnettoRaw     */
-/*  ##   ## ##   ##   U: 2022/06/15 15:23:34 by:dnettoRaw     */
-/*    ###########                                             */
-
+// //////////////////////////////////////////////////////////////////////////
+//      #######        F: header.ts                                          
+//   ###       ###     P: dr-header                                          
+//  ##   ## ##   ##    C: Invalid date        by: 22/06/15 15:23:17 by:dnettoRaw
+//       ## ##         U: 2026/04/22 17:26:57 by: dnettoRaw                  
+//                  
+//  ##   ## ##   ## 
+//    ###########   
+// //////////////////////////////////////////////////////////////////////////
 
 import moment = require('moment')
 import vscode = require('vscode')
@@ -175,13 +176,31 @@ const getCustomLogo = () => {
 }
 
 /**
- * Replaces template border characters based on delimiters
+ * Applies language-specific delimiters to template
+ * Preserves template variables by extracting and replacing only border asterisks
  */
-const applyTemplateChar = (template: string, left: string) => {
-  if (left.startsWith('//')) {
-    return template.replace(/\*/g, '/')
-  }
-  return template
+const applyDelimitersToTemplate = (template: string, left: string, right: string) => {
+  const lines = template.split('\n')
+  
+  return lines.map((line) => {
+    if (line.length === 0) return line
+    if (!line.includes('*')) return line
+    
+    // For lines that are all asterisks (border lines), create a border with delimiters
+    if (/^\*+$/.test(line)) {
+      const fillChar = left.charAt(0)
+      const fillLength = Math.max(1, 40 - (left.length + right.length) / 2)
+      return left + fillChar.repeat(Math.floor(fillLength)) + right
+    }
+    
+    // For content lines with asterisks, extract content between borders and preserve it
+    if (line.startsWith('*') && line.endsWith('*')) {
+      const content = line.substring(1, line.length - 1)
+      return left + content + right
+    }
+    
+    return line
+  }).join('\n')
 }
 
 const getTemplate = (languageId: string) => {
@@ -192,11 +211,8 @@ const getTemplate = (languageId: string) => {
   const delimiters = getLanguageDelimiters(languageId)
   if (!delimiters) return baseTemplate
   const [left, right] = delimiters
-  const width = left.length
 
-  return applyTemplateChar(baseTemplate, left)
-    .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
-      left + '$2' + right)
+  return applyDelimitersToTemplate(baseTemplate, left, right)
 }
 
 const getLittleTemplate = (languageId: string) => {
@@ -207,22 +223,16 @@ const getLittleTemplate = (languageId: string) => {
   const delimiters = getLanguageDelimiters(languageId)
   if (!delimiters) return baseTemplate
   const [left, right] = delimiters
-  const width = left.length
 
-  return applyTemplateChar(baseTemplate, left)
-    .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
-      left + '$2' + right)
+  return applyDelimitersToTemplate(baseTemplate, left, right)
 }
 
 const getLogoTemplate = (languageId: string) => {
   const delimiters = getLanguageDelimiters(languageId)
   if (!delimiters) return logoTemplate
   const [left, right] = delimiters
-  const width = left.length
 
-  return applyTemplateChar(logoTemplate, left)
-    .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
-      left + '$2' + right)
+  return applyDelimitersToTemplate(logoTemplate, left, right)
 }
 
 /**
