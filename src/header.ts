@@ -199,7 +199,7 @@ export const extractLittleHeader = (text: string): string | null => {
  * Returns [ global match, offset, field ]
  */
 const fieldRegex = (name: string) =>
-  new RegExp(`^((?:.*\\\n)*.*)(\\\$${name}_*)`, '')
+  new RegExp(`^((?:.*\\\n)*.*)(\\\$${name}(?![0-9])_*)`, '')
 
 /**
  * Get value for given field name from header string
@@ -290,7 +290,7 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
   ]
 
   // Add logo lines to fields
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i <= 10; i++) {
     fields.push({ name: `LOGO${i}`, value: logo[i] || ' ' })
   }
 
