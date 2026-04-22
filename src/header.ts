@@ -8,6 +8,7 @@
 
 
 import moment = require('moment')
+import vscode = require('vscode')
 import { languageDemiliters } from './delimiters'
 
 export type HeaderInfo = {
@@ -40,19 +41,18 @@ export type littleHeaderInfo = {
 const genericTemplate = `
 ********************************************************************************
 *                                                                              *
-*   $FILENAME__________________________________               #####            *
-*                                                          ############        *
-*   By: $AUTHOR________________________________          ###          ###      *
-*                                                       ##    ##  ##    ##     *
-*   obs: $OBS1_________________________________               ##  ##           *
-*        $OBS2_________________________________                                *
-*        $OBS3_________________________________         ##    ##  ##   ##      *
-*                                                        ###  ######  ###      *
-*   Created: $CREATEDAT_________ by $CREATEDBY_           #####    ####        *
-*   Updated: $UPDATEDAT_________ by $UPDATEDBY_                                *
-*                                                     $URL____________________ *
+*   $FILENAME__________________________________        $LOGO0_________________ *
+*                                                      $LOGO1_________________ *
+*   By: $AUTHOR________________________________        $LOGO2_________________ *
+*                                                      $LOGO3_________________ *
+*   obs: $OBS1_________________________________        $LOGO4_________________ *
+*        $OBS2_________________________________        $LOGO5_________________ *
+*        $OBS3_________________________________        $LOGO6_________________ *
+*                                                      $LOGO7_________________ *
+*   Created: $CREATEDAT_________ by $CREATEDBY_        $LOGO8_________________ *
+*   Updated: $UPDATEDAT_________ by $UPDATEDBY_        $LOGO9_________________ *
+*                          $URL_______________________________________________ *
 ********************************************************************************
-
 `.substring(1)
 
 const littleTemplate=`
@@ -82,38 +82,69 @@ const littleTemplate=`
 /**
  * Template no tex and no updates
  */
-const logoTemplate=`
-*       #######      *
-*    ###       ###   *
-*   ##   ## ##   ##  *
-*        ## ##       *
-*                    *
-*   ##   ## ##   ##  *
-*     ###########    *
-
+const logoTemplate = `
+*       $LOGO0______________________________________________ *
+*       $LOGO1______________________________________________ *
+*       $LOGO2______________________________________________ *
+*       $LOGO3______________________________________________ *
+*       $LOGO4______________________________________________ *
+*       $LOGO5______________________________________________ *
+*       $LOGO6______________________________________________ *
+*       $LOGO7______________________________________________ *
+*       $LOGO8______________________________________________ *
+*       $LOGO9______________________________________________ *
 `.substring(1)
 
 
 /**
  * Get specific header template for languageId
  */
+const getDefaultLogo = () => [
+  '               #####   ',
+  '            ############',
+  '          ###          ###',
+  '         ##    ##  ##    ##',
+  '               ##  ##   ',
+  '                        ',
+  '         ##    ##  ##   ##',
+  '          ###  ######  ###',
+  '           #####    ####'
+]
+
+const getCustomLogo = () => {
+  const customLogo = vscode.workspace.getConfiguration().get('header.logo') as string
+  if (customLogo) {
+    const lines = customLogo.split('\n')
+    return lines
+  }
+  return getDefaultLogo()
+}
+
 const getTemplate = (languageId: string) => {
   const [left, right] = languageDemiliters[languageId]
   const width = left.length
 
-  // Replace all delimiters with ones for current language
   return genericTemplate
     .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
-    left + '$2' + right)
+      left + '$2' + right)
 }
+
 const getLittleTemplate = (languageId: string) => {
   const [left, right] = languageDemiliters[languageId]
   const width = left.length
 
-  // Replace all delimiters with ones for current language
   return littleTemplate
     .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
-    left + '$2' + right) //pad(' ',right.length))
+      left + '$2' + right)
+}
+
+const getLogoTemplate = (languageId: string) => {
+  const [left, right] = languageDemiliters[languageId]
+  const width = left.length
+
+  return logoTemplate
+    .replace(new RegExp(`^(.{${width}})(.*)(.{${width}})$`, 'gm'),
+      left + '$2' + right)
 }
 
 /**
@@ -223,20 +254,32 @@ export const getLittleHeaderInfo = (header: string): littleHeaderInfo => ({
 /**
  * Renders a language template with header info
  */
-export const renderHeader = (languageId: string, info: HeaderInfo) => [
-  { name: 'FILENAME', value: info.filename },
-  { name: 'AUTHOR', value: info.author },
-  { name: 'CREATEDAT', value: formatDate(info.createdAt) },
-  { name: 'CREATEDBY', value: info.createdBy },
-  { name: 'UPDATEDAT', value: formatDate(info.updatedAt) },
-  { name: 'UPDATEDBY', value: info.updatedBy },
-  { name: 'URL', value: info.url },
-  { name: 'OBS1', value: info.obs1},  
-  { name: 'OBS2', value: info.obs2},
-  { name: 'OBS3', value: info.obs3}  
-].reduce((header, field) =>
-  setFieldValue(header, field.name, field.value),
-  getTemplate(languageId))
+export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boolean = false) => {
+  const logo = getCustomLogo()
+  const template = logoOnly ? getLogoTemplate(languageId) : getTemplate(languageId)
+
+  const fields = [
+    { name: 'FILENAME', value: info.filename },
+    { name: 'AUTHOR', value: info.author },
+    { name: 'CREATEDAT', value: formatDate(info.createdAt) },
+    { name: 'CREATEDBY', value: info.createdBy },
+    { name: 'UPDATEDAT', value: formatDate(info.updatedAt) },
+    { name: 'UPDATEDBY', value: info.updatedBy },
+    { name: 'URL', value: info.url },
+    { name: 'OBS1', value: info.obs1 },
+    { name: 'OBS2', value: info.obs2 },
+    { name: 'OBS3', value: info.obs3 }
+  ]
+
+  // Add logo lines to fields
+  for (let i = 0; i < 10; i++) {
+    fields.push({ name: `LOGO${i}`, value: logo[i] || ' ' })
+  }
+
+  return fields.reduce((header, field) =>
+    setFieldValue(header, field.name, field.value),
+    template)
+}
 
 export const renderLittleHeader = (languageId: string, info: littleHeaderInfo) => [
   { name: 'FILENAME', value: info.filename },

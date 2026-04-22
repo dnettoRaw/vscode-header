@@ -73,14 +73,20 @@ To override these values, specify these properties in *User Settings* :
  - [x] creation date
  - [x] modifcation date
  - [x] observation 
-   - [ ] observation show dialog in insert header
+   - [x] observation show dialog in insert header
  - [x] web site 
-   - [ ] auto add https
-   - [ ] fix for very long sites url
+   - [x] auto add https
+   - [x] fix for very long sites url
  - [x] workflow publish relase
  - [x] little version of header
- - [ ] custon logo by user
- - [ ] versiion with only logo
+ - [x] custon logo by user
+ - [x] versiion with only logo
+ - [ ] automatic git integration (name/email)
+ - [ ] license support (MIT, Apache, etc)
+ - [ ] dynamic delimiters via config
+ - [ ] automated tests suite
+ - [ ] bulk update headers in workspace
+ - [ ] snippets support
 
 
 ## Issues

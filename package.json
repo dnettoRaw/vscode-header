@@ -41,7 +41,7 @@
                 },
                 "header.logo": {
                     "type": "string",
-                    "description": "your logo in ascii art [soon]"
+                    "description": "Your custom logo in ASCII art (optional)"
                 }
             }
         },
