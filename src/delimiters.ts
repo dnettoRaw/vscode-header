@@ -1,3 +1,5 @@
+import vscode = require('vscode')
+
 /*      #######                                               */
 /*   ###       ###                                            */
 /*  ##   ## ##   ##   F: delimiters.ts                        */
@@ -51,5 +53,22 @@ export const languageDemiliters: { [lang: string]: string[] | undefined } = {
   'typescript': slashes,
   'typescriptreact': slashes,
   'xsl': slashes,
-  'yaml': hashes
+  'yaml': hashes,
+  'markdown': hashes,
+  'html': slashes,
+  'xml': slashes,
+  'vue': slashes,
+  'svelte': slashes,
+  'terraform': hashes,
+  'elixir': hashes,
+  'erlang': percents,
+  'clojure': semicolons
+}
+
+/**
+ * Get language delimiters, including custom ones from configuration
+ */
+export const getLanguageDelimiters = (languageId: string): string[] | undefined => {
+  const customDelimiters = vscode.workspace.getConfiguration().get('header.customDelimiters') as { [lang: string]: string[] }
+  return (customDelimiters && customDelimiters[languageId]) || languageDemiliters[languageId]
 }

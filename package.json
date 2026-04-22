@@ -42,6 +42,22 @@
                 "header.logo": {
                     "type": "string",
                     "description": "Your custom logo in ASCII art (optional)"
+                },
+                "header.license": {
+                    "type": "string",
+                    "description": "License to include in headers (optional)"
+                },
+                "header.customDelimiters": {
+                    "type": "object",
+                    "description": "Custom language delimiters. Format: { 'langId': ['left', 'right'] }",
+                    "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 2,
+                        "maxItems": 2
+                    }
                 }
             }
         },
@@ -60,6 +76,10 @@
                 "command": "header.insertOnlyLogoleHeader",
                 "title": "Insert only your logo header",
                 "when": "editorTextFocus"
+            },
+            {
+                "command": "header.updateAllHeaders",
+                "title": "Update all headers in workspace"
             }
         ],
         "keybindings": [
@@ -81,6 +101,24 @@
                 "mac": "cmd+alt+l",
                 "when": "editorTextFocus"
             }
+        ],
+        "snippets": [
+            {
+                "language": "javascript",
+                "path": "./snippets/headers.json"
+            },
+            {
+                "language": "typescript",
+                "path": "./snippets/headers.json"
+            },
+            {
+                "language": "c",
+                "path": "./snippets/headers.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/headers.json"
+            }
         ]
     },
     "scripts": {
@@ -90,8 +128,12 @@
         "postinstall": "node ./node_modules/vscode/bin/install"
     },
     "devDependencies": {
+        "@types/glob": "^8.1.0",
+        "@types/mocha": "^10.0.10",
         "@types/node": "^6.0.45",
         "auto-version-js": "^0.3.10",
+        "glob": "^13.0.6",
+        "mocha": "^11.7.5",
         "typescript": "^2.0.3",
         "vscode": "^1.1.37"
     },

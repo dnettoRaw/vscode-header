@@ -1,0 +1,16 @@
+{
+    "Insert Header": {
+        "prefix": "header",
+        "body": [
+            "header"
+        ],
+        "description": "Insert VS Code Header"
+    },
+    "Insert Little Header": {
+        "prefix": "lheader",
+        "body": [
+            "lheader"
+        ],
+        "description": "Insert VS Code Little Header"
+    }
+}

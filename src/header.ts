@@ -9,7 +9,7 @@
 
 import moment = require('moment')
 import vscode = require('vscode')
-import { languageDemiliters } from './delimiters'
+import { getLanguageDelimiters } from './delimiters'
 
 export type HeaderInfo = {
   filename: string,
@@ -21,7 +21,8 @@ export type HeaderInfo = {
   url: string,
   obs1: string,
   obs2: string,
-  obs3: string
+  obs3: string,
+  license: string
 }
 
 export type littleHeaderInfo = {
@@ -51,7 +52,7 @@ const genericTemplate = `
 *                                                      $LOGO7_________________ *
 *   Created: $CREATEDAT_________ by $CREATEDBY_        $LOGO8_________________ *
 *   Updated: $UPDATEDAT_________ by $UPDATEDBY_        $LOGO9_________________ *
-*                          $URL_______________________________________________ *
+*   License: $LICENSE_________________________        $URL____________________ *
 ********************************************************************************
 `.substring(1)
 
@@ -121,7 +122,9 @@ const getCustomLogo = () => {
 }
 
 const getTemplate = (languageId: string) => {
-  const [left, right] = languageDemiliters[languageId]
+  const delimiters = getLanguageDelimiters(languageId)
+  if (!delimiters) return genericTemplate
+  const [left, right] = delimiters
   const width = left.length
 
   return genericTemplate
@@ -130,7 +133,9 @@ const getTemplate = (languageId: string) => {
 }
 
 const getLittleTemplate = (languageId: string) => {
-  const [left, right] = languageDemiliters[languageId]
+  const delimiters = getLanguageDelimiters(languageId)
+  if (!delimiters) return littleTemplate
+  const [left, right] = delimiters
   const width = left.length
 
   return littleTemplate
@@ -139,7 +144,9 @@ const getLittleTemplate = (languageId: string) => {
 }
 
 const getLogoTemplate = (languageId: string) => {
-  const [left, right] = languageDemiliters[languageId]
+  const delimiters = getLanguageDelimiters(languageId)
+  if (!delimiters) return logoTemplate
+  const [left, right] = delimiters
   const width = left.length
 
   return logoTemplate
@@ -169,7 +176,7 @@ const parseDate = (date: string) =>
  * Check if language is supported
  */
 export const supportsLanguage = (languageId: string) =>
-  languageId in languageDemiliters
+  getLanguageDelimiters(languageId) !== undefined
 
 /**
  * Returns current header text if present at top of document
@@ -239,7 +246,8 @@ export const getHeaderInfo = (header: string): HeaderInfo => ({
   url: getFieldValue(header, 'URL'),
   obs1: getFieldValue(header, 'OBS1'), 
   obs2: getFieldValue(header, 'OBS2'),
-  obs3: getFieldValue(header, 'OBS3')  
+  obs3: getFieldValue(header, 'OBS3'),
+  license: getFieldValue(header, 'LICENSE')
 })
 
 export const getLittleHeaderInfo = (header: string): littleHeaderInfo => ({
@@ -268,7 +276,8 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
     { name: 'URL', value: info.url },
     { name: 'OBS1', value: info.obs1 },
     { name: 'OBS2', value: info.obs2 },
-    { name: 'OBS3', value: info.obs3 }
+    { name: 'OBS3', value: info.obs3 },
+    { name: 'LICENSE', value: info.license }
   ]
 
   // Add logo lines to fields

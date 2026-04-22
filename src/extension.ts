@@ -10,6 +10,7 @@
 import { basename } from 'path'
 import vscode = require('vscode')
 import moment = require('moment')
+import { execSync } from 'child_process'
 
 import {
   ExtensionContext, TextEdit, TextEditorEdit, TextDocument, Position, Range
@@ -24,18 +25,44 @@ import {
 } from './header'
 
 /**
- * Return current user from config or ENV by default
+ * Get user name from Git config
  */
-const getCurrentUser = () =>
-  vscode.workspace.getConfiguration()
-    .get('header.username') || process.env['USER'] || 'marvin'
+const getGitUser = () => {
+  try {
+    return execSync('git config user.name').toString().trim()
+  } catch (e) {
+    return null
+  }
+}
 
 /**
- * Return current user mail from config or default value
+ * Get user email from Git config
+ */
+const getGitEmail = () => {
+  try {
+    return execSync('git config user.email').toString().trim()
+  } catch (e) {
+    return null
+  }
+}
+
+/**
+ * Return current user from config, Git, or ENV by default
+ */
+const getCurrentUser = () =>
+  vscode.workspace.getConfiguration().get('header.username') || getGitUser() || process.env['USER'] || 'marvin'
+
+/**
+ * Return current user mail from config, Git, or default value
  */
 const getCurrentUserMail = () =>
-  vscode.workspace.getConfiguration()
-    .get('header.email') || `${getCurrentUser()}@dnetto.dev`
+  vscode.workspace.getConfiguration().get('header.email') || getGitEmail() || `${getCurrentUser()}@dnetto.dev`
+
+/**
+ * Return current license from config
+ */
+const getCurrentLicense = () =>
+  vscode.workspace.getConfiguration().get('header.license') || 'MIT'
 
 /**
  * Return current user from config or ENV by default
@@ -68,6 +95,7 @@ const newHeaderInfo = (document: TextDocument, headerInfo?: HeaderInfo) => {
   const user = getCurrentUser()
   const mail = getCurrentUserMail()
   const _url = getCurrentUrl()
+  const _license = getCurrentLicense() as string
 
   return Object.assign({},
     // This will be overwritten if headerInfo is not null
@@ -76,7 +104,8 @@ const newHeaderInfo = (document: TextDocument, headerInfo?: HeaderInfo) => {
       createdBy: user,
       obs1: ' ',
       obs2: ' ',
-      obs3: ' '
+      obs3: ' ',
+      license: _license
     },
     headerInfo,
     {
@@ -208,6 +237,44 @@ const insertOnlyLogoHeaderHandler = () => {
     )
 }
 
+const updateAllHeadersHandler = async () => {
+  const files = await vscode.workspace.findFiles('**/*', '**/node_modules/**')
+  let count = 0
+
+  for (const file of files) {
+    const document = await vscode.workspace.openTextDocument(file)
+    if (!supportsLanguage(document.languageId)) continue
+
+    const currentHeader = extractHeader(document.getText())
+    const currentLHeader = extractLittleHeader(document.getText())
+
+    if (currentHeader || currentLHeader) {
+      const editor = await vscode.window.showTextDocument(document)
+      await editor.edit(editBuilder => {
+        if (currentHeader) {
+          editBuilder.replace(
+            new Range(0, 0, 15, 0),
+            renderHeader(
+              document.languageId,
+              newHeaderInfo(document, getHeaderInfo(currentHeader))
+            )
+          )
+        } else if (currentLHeader) {
+          editBuilder.replace(
+            new Range(0, 0, 8, 0),
+            renderLittleHeader(
+              document.languageId,
+              newLittleHeaderInfo(document, getLittleHeaderInfo(currentLHeader))
+            )
+          )
+        }
+      })
+      count++
+    }
+  }
+  vscode.window.showInformationMessage(`Updated ${count} headers in the workspace.`)
+}
+
 /**
  * Start watcher for document save to update current header
  */
@@ -256,7 +323,9 @@ export const activate = (context: vscode.ExtensionContext) => {
     .registerTextEditorCommand('header.insertLittleHeader', insertLittleHeaderHandler)
   const onlylogo = vscode.commands
     .registerTextEditorCommand('header.insertOnlyLogoleHeader', insertOnlyLogoHeaderHandler)
+  const updateAll = vscode.commands
+    .registerCommand('header.updateAllHeaders', updateAllHeadersHandler)
 
-  context.subscriptions.push(disposable, littleHeader, onlylogo)
+  context.subscriptions.push(disposable, littleHeader, onlylogo, updateAll)
   startUpdateOnSaveWatcher(context.subscriptions)
 }

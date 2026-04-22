@@ -81,12 +81,12 @@ To override these values, specify these properties in *User Settings* :
  - [x] little version of header
  - [x] custon logo by user
  - [x] versiion with only logo
- - [ ] automatic git integration (name/email)
- - [ ] license support (MIT, Apache, etc)
- - [ ] dynamic delimiters via config
- - [ ] automated tests suite
- - [ ] bulk update headers in workspace
- - [ ] snippets support
+ - [x] automatic git integration (name/email)
+ - [x] license support (MIT, Apache, etc)
+ - [x] dynamic delimiters via config
+ - [x] automated tests suite
+ - [x] bulk update headers in workspace
+ - [x] snippets support
 
 
 ## Issues
