@@ -14,12 +14,17 @@ suite('Header Extension Test Suite', () => {
 	});
 
 	test('Delimiter matching', () => {
+		// Modern languages now use open-ended // style
 		const tsDelimiters = getLanguageDelimiters('typescript');
-		assert.deepStrictEqual(tsDelimiters, ['// ', ' //']);
+		assert.deepStrictEqual(tsDelimiters, ['// ', '']);
+
+		const jsDelimiters = getLanguageDelimiters('javascript');
+		assert.deepStrictEqual(jsDelimiters, ['// ', '']);
 
 		const cDelimiters = getLanguageDelimiters('c');
-		assert.deepStrictEqual(cDelimiters, ['/* ', ' */']);
+		assert.deepStrictEqual(cDelimiters, ['// ', '']);
 
+		// HTML still uses block comments
 		const htmlDelimiters = getLanguageDelimiters('html');
 		assert.deepStrictEqual(htmlDelimiters, ['<!-- ', ' -->']);
 	});

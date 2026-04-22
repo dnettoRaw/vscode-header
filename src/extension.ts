@@ -10,6 +10,7 @@
 import { basename } from 'path'
 import vscode = require('vscode')
 import moment = require('moment')
+import path = require('path')
 import { execSync } from 'child_process'
 
 import {
@@ -69,7 +70,7 @@ const getCurrentLicense = () => {
   const workspaceFolders = vscode.workspace.workspaceFolders
   if (workspaceFolders && workspaceFolders.length > 0) {
     try {
-      const licensePath = vscode.Uri.joinPath(workspaceFolders[0].uri, 'LICENSE')
+      const licensePath = vscode.Uri.file(path.join(workspaceFolders[0].uri.fsPath, 'LICENSE'))
       // This is a bit hacky since we can't easily read file existence synchronously in VSCode API
       // But we can try to use fs.existsSync if it's a local path
       const fs = require('fs')
@@ -100,7 +101,7 @@ const getCurrentProject = () => {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (workspaceFolders && workspaceFolders.length > 0) {
     try {
-      const pkgPath = vscode.Uri.joinPath(workspaceFolders[0].uri, 'package.json')
+      const pkgPath = vscode.Uri.file(path.join(workspaceFolders[0].uri.fsPath, 'package.json'))
       const fs = require('fs')
       if (fs.existsSync(pkgPath.fsPath)) {
         const pkg = JSON.parse(fs.readFileSync(pkgPath.fsPath, 'utf8'))

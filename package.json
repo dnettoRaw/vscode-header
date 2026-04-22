@@ -67,7 +67,12 @@
                 "header.logoType": {
                     "type": "string",
                     "default": "default",
-                    "enum": ["default", "linux", "vscode", "max"],
+                    "enum": [
+                        "default",
+                        "linux",
+                        "vscode",
+                        "max"
+                    ],
                     "description": "Choose a built-in logo type"
                 },
                 "header.template": {
@@ -147,14 +152,18 @@
         "vs:compile": "npx auto-version ; vsce package ",
         "compile": "tsc -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./out/src/test/runTest.js"
+        "test": "node ./out/src/test/runTest.js",
+        "lint": "eslint src"
     },
     "devDependencies": {
         "@types/glob": "^8.1.0",
         "@types/mocha": "^10.0.10",
         "@types/node": "^6.0.45",
+        "@typescript-eslint/eslint-plugin": "^8.59.0",
+        "@typescript-eslint/parser": "^8.59.0",
         "@vscode/test-electron": "^2.5.2",
         "auto-version-js": "^0.3.10",
+        "eslint": "^10.2.1",
         "glob": "^13.0.6",
         "mocha": "^11.7.5",
         "typescript": "^6.0.3",
