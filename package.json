@@ -15,7 +15,7 @@
     "homepage": "https://github.com/dnettoRaw/vscode-header",
     "license": "MIT",
     "engines": {
-        "vscode": "^1.6.0"
+        "vscode": "^1.40.0"
     },
     "categories": [
         "Other"
@@ -152,7 +152,6 @@
         "vscode:prepublish": "tsc -p ./",
         "vs:compile": "npx auto-version ; vsce package ",
         "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "node ./out/src/test/runTest.js",
         "lint": "eslint src"
     },
@@ -168,7 +167,7 @@
         "glob": "^13.0.6",
         "mocha": "^11.7.5",
         "typescript": "^6.0.3",
-        "vscode": "^1.1.37"
+        "@types/vscode": "^1.40.0"
     },
     "dependencies": {
         "moment": "^2.15.0"
