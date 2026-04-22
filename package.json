@@ -58,6 +58,11 @@
                         "minItems": 2,
                         "maxItems": 2
                     }
+                },
+                "header.autoInsert": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Automatically insert header on new file creation"
                 }
             }
         },

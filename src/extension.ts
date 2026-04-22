@@ -59,10 +59,28 @@ const getCurrentUserMail = () =>
   vscode.workspace.getConfiguration().get('header.email') || getGitEmail() || `${getCurrentUser()}@dnetto.dev`
 
 /**
- * Return current license from config
+ * Return current license from config or detect from workspace
  */
-const getCurrentLicense = () =>
-  vscode.workspace.getConfiguration().get('header.license') || 'MIT'
+const getCurrentLicense = () => {
+  const configLicense = vscode.workspace.getConfiguration().get('header.license') as string
+  if (configLicense) return configLicense
+
+  // Try to find a LICENSE file in the workspace
+  const workspaceFolders = vscode.workspace.workspaceFolders
+  if (workspaceFolders && workspaceFolders.length > 0) {
+    try {
+      const licensePath = vscode.Uri.joinPath(workspaceFolders[0].uri, 'LICENSE')
+      // This is a bit hacky since we can't easily read file existence synchronously in VSCode API
+      // But we can try to use fs.existsSync if it's a local path
+      const fs = require('fs')
+      if (fs.existsSync(licensePath.fsPath)) {
+        return 'LICENSE' // Just indicate there's a file
+      }
+    } catch (e) { }
+  }
+
+  return 'MIT'
+}
 
 /**
  * Return current user from config or ENV by default
@@ -81,6 +99,14 @@ const getCurrentUrl = () => {
 const getCurrentProject = () => {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (workspaceFolders && workspaceFolders.length > 0) {
+    try {
+      const pkgPath = vscode.Uri.joinPath(workspaceFolders[0].uri, 'package.json')
+      const fs = require('fs')
+      if (fs.existsSync(pkgPath.fsPath)) {
+        const pkg = JSON.parse(fs.readFileSync(pkgPath.fsPath, 'utf8'))
+        if (pkg.name) return pkg.name
+      }
+    } catch (e) { }
     return workspaceFolders[0].name;
   }
   return 'standalone';
@@ -319,6 +345,37 @@ const startUpdateOnSaveWatcher = (subscriptions: vscode.Disposable[]) =>
   )
 
 
+/**
+ * Create a status bar item for quick access
+ */
+const createStatusBarItem = (subscriptions: vscode.Disposable[]) => {
+  const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100)
+  statusBarItem.command = 'header.insertHeader'
+  statusBarItem.text = '$(file-code) Header'
+  statusBarItem.tooltip = 'Insert VS Code Header'
+  statusBarItem.show()
+  subscriptions.push(statusBarItem)
+}
+
+/**
+ * Automatically insert header when a new file is created
+ */
+const startAutoInsertWatcher = (subscriptions: vscode.Disposable[]) => {
+  vscode.workspace.onDidOpenTextDocument(document => {
+    const config = vscode.workspace.getConfiguration()
+    if (!config.get('header.autoInsert')) return
+
+    if (document.lineCount === 1 && document.getText() === '' && supportsLanguage(document.languageId)) {
+      const editor = vscode.window.activeTextEditor
+      if (editor && editor.document === document) {
+        editor.edit(editBuilder => {
+          editBuilder.insert(new Position(0, 0), renderHeader(document.languageId, newHeaderInfo(document)))
+        })
+      }
+    }
+  }, null, subscriptions)
+}
+
 export const activate = (context: vscode.ExtensionContext) => {
   const disposable = vscode.commands
     .registerTextEditorCommand('header.insertHeader', insertHeaderHandler)
@@ -331,4 +388,6 @@ export const activate = (context: vscode.ExtensionContext) => {
 
   context.subscriptions.push(disposable, littleHeader, onlylogo, updateAll)
   startUpdateOnSaveWatcher(context.subscriptions)
+  createStatusBarItem(context.subscriptions)
+  startAutoInsertWatcher(context.subscriptions)
 }

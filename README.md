@@ -62,7 +62,8 @@ To override these values, specify these properties in *User Settings* :
 {
   "header.username": string,
   "header.email": string,
-  "header.url" : string
+  "header.url" : string,
+  "header.autoInsert": boolean
 }
 ```
 
