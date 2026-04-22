@@ -90,23 +90,54 @@ const logoTemplate = `
  * Get specific header template for languageId
  */
 const getDefaultLogo = () => [
-  '               #####   ',
-  '            ############',
-  '          ###          ###',
-  '         ##    ##  ##    ##',
-  '               ##  ##   ',
-  '                        ',
-  '         ##    ##  ##   ##',
-  '          ###  ######  ###',
-  '           #####    ####'
+  '         #####           ',
+  '      ############       ',
+  '    ###          ###     ',
+  '   ##    ##  ##    ##    ',
+  '         ##  ##          ',
+  '                         ',
+  '   ##    ##  ##    ##    ',
+  '    ###  ######  ###     ',
+  '     #####    ####       '
+]
+
+const getLinuxLogo = () => [
+  '        .88888888:.      ',
+  '      88888888888888.    ',
+  '    .8888888888888888.   ',
+  '    888888888888888888   ',
+  '    88' + "'" + '888888888888888P   ',
+  '     88_:88:88:88:88:88  ',
+  '     .8888888888888888.  ',
+  '    .888888888888888888. ',
+  '   .88888888888888888888.',
+  '  .8888888888888888888888'
+]
+
+const getVSCodeLogo = () => [
+  '     .::::::::.          ',
+  '   .::::::::::::.        ',
+  '  :::::      :::::       ',
+  ' :::::        :::::      ',
+  ' ::::          ::::      ',
+  ' ::::          ::::      ',
+  ' :::::        :::::      ',
+  '  :::::      :::::       ',
+  '   ::::::::::::::        ',
+  '     ::::::::::          '
 ]
 
 const getCustomLogo = () => {
-  const customLogo = vscode.workspace.getConfiguration().get('header.logo') as string
+  const config = vscode.workspace.getConfiguration()
+  const customLogo = config.get('header.logo') as string
   if (customLogo) {
-    const lines = customLogo.split('\n')
-    return lines
+    return customLogo.split('\n')
   }
+
+  const logoType = config.get('header.logoType') as string
+  if (logoType === 'linux') return getLinuxLogo()
+  if (logoType === 'vscode') return getVSCodeLogo()
+
   return getDefaultLogo()
 }
 
@@ -200,7 +231,7 @@ const getFieldValue = (header: string, name: string) => {
   const template = genericTemplate
   const match = template.match(new RegExp(`\\$${name}(?![0-9])_*`))
   if (!match) return ''
-  
+
   const offset = template.indexOf(match[0])
   // This only works if the header hasn't shifted too much.
   // For a more robust solution, we'd need to search the header for the surrounding text.
@@ -227,7 +258,7 @@ export const getHeaderInfo = (header: string): HeaderInfo => ({
   updatedBy: getFieldValue(header, 'UPDATEDBY'),
   updatedAt: parseDate(getFieldValue(header, 'UPDATEDAT')),
   url: getFieldValue(header, 'URL'),
-  obs1: getFieldValue(header, 'OBS1'), 
+  obs1: getFieldValue(header, 'OBS1'),
   obs2: getFieldValue(header, 'OBS2'),
   obs3: getFieldValue(header, 'OBS3'),
   license: getFieldValue(header, 'LICENSE')
@@ -260,7 +291,12 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
     OBS1: info.obs1,
     OBS2: info.obs2,
     OBS3: info.obs3,
-    LICENSE: info.license
+    LICENSE: info.license,
+    // Aliases
+    CREATED: formatDate(info.createdAt),
+    UPDATED: formatDate(info.updatedAt),
+    USER: info.createdBy,
+    MAIL: info.author.match(/<(.*)>/)?.[1] || info.author
   }
   for (let i = 0; i <= 10; i++) {
     allFields[`LOGO${i}`] = logo[i] || ' '
