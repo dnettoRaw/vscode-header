@@ -41,18 +41,17 @@ export type littleHeaderInfo = {
 
 const genericTemplate = `
 ********************************************************************************
-*                                            $LOGO0___________________________ *
-*   $FILENAME___________                     $LOGO1___________________________ *
-*                                            $LOGO2___________________________ *
-*   By: $AUTHOR_________                     $LOGO3___________________________ *
-*                                            $LOGO4___________________________ *
-*   obs: $OBS1__________                     $LOGO5___________________________ *
-*        $OBS2__________                     $LOGO6___________________________ *
-*        $OBS3__________                     $LOGO7___________________________ *
-*                                            $LOGO8___________________________ *
-*   Created: $CREATEDAT_________ by $CREATEDBY_      $LOGO9___________________ *
-*   Updated: $UPDATEDAT_________ by $UPDATEDBY_      $LOGO10__________________ *
-*   License: $LICENSE_________________________      $URL______________________ *
+*  $LOGO0_________________   $FILENAME________________________________________
+*  $LOGO1_________________   By: $AUTHOR______________________________________
+*  $LOGO2_________________
+*  $LOGO3_________________   Created: $CREATEDAT_________ by $CREATEDBY_
+*  $LOGO4_________________   Updated: $UPDATEDAT_________ by $UPDATEDBY_
+*  $LOGO5_________________
+*  $LOGO6_________________   obs: $OBS1_______________________________________
+*  $LOGO7_________________        $OBS2_______________________________________
+*  $LOGO8_________________        $OBS3_______________________________________
+*  $LOGO9_________________
+*  $LOGO10________________   License: $LICENSE__________  $URL________________
 ********************************************************************************
 `.substring(1)
 
@@ -158,7 +157,7 @@ const getLogoTemplate = (languageId: string) => {
  * Fit value to correct field width, padded with spaces
  */
 const pad = (value: string, width: number) =>
-  value.concat(' '.repeat(width)).substr(0, width)
+  value.length < width ? value.concat(' '.repeat(width - value.length)) : value
 
 /**
  * Stringify Date to correct format for header
@@ -195,50 +194,26 @@ export const extractLittleHeader = (text: string): string | null => {
 }
 
 /**
- * Regex to match field in template
- * Returns [ global match, offset, field ]
- */
-const fieldRegex = (name: string) =>
-  new RegExp(`^((?:.*\\\n)*.*)(\\\$${name}(?![0-9])_*)`, '')
-
-/**
- * Get value for given field name from header string
+ * Get value for given field name from header string by finding its position in the template
  */
 const getFieldValue = (header: string, name: string) => {
-  const match = genericTemplate.match(fieldRegex(name))
+  const template = genericTemplate
+  const match = template.match(new RegExp(`\\$${name}(?![0-9])_*`))
   if (!match) return ''
-  const [_, offset, field] = match
-
-  return header.substr(offset.length, field.length)
+  
+  const offset = template.indexOf(match[0])
+  // This only works if the header hasn't shifted too much.
+  // For a more robust solution, we'd need to search the header for the surrounding text.
+  // But for now, we'll use a simple heuristic.
+  return header.substr(offset, match[0].length).trim()
 }
+
 const getLittleFieldValue = (header: string, name: string) => {
-  const match = littleTemplate.match(fieldRegex(name))
+  const template = littleTemplate
+  const match = template.match(new RegExp(`\\$${name}(?![0-9])_*`))
   if (!match) return ''
-  const [_, offset, field] = match
-
-  return header.substr(offset.length, field.length)
-}
-
-/**
- * Set field value in header string
- */
-const setFieldValue = (header: string, name: string, value: string) => {
-  const match = genericTemplate.match(fieldRegex(name))
-  if (!match) return header
-  const [_, offset, field] = match
-
-  return header.substr(0, offset.length)
-    .concat(pad(value, field.length))
-    .concat(header.substr(offset.length + field.length))
-}
-const setLittleFieldValue = (header: string, name: string, value: string) => {
-  const match = littleTemplate.match(fieldRegex(name))
-  if (!match) return header
-  const [_, offset, field] = match
-
-  return header.substr(0, offset.length)
-    .concat(pad(value, field.length))
-    .concat(header.substr(offset.length + field.length))
+  const offset = template.indexOf(match[0])
+  return header.substr(offset, match[0].length).trim()
 }
 
 /**
@@ -272,40 +247,52 @@ export const getLittleHeaderInfo = (header: string): littleHeaderInfo => ({
  */
 export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boolean = false) => {
   const logo = getCustomLogo()
-  const template = logoOnly ? getLogoTemplate(languageId) : getTemplate(languageId)
+  let template = logoOnly ? getLogoTemplate(languageId) : getTemplate(languageId)
 
-  const fields: { name: string, value: string }[] = [
-    { name: 'FILENAME', value: info.filename },
-    { name: 'AUTHOR', value: info.author },
-    { name: 'CREATEDAT', value: formatDate(info.createdAt) },
-    { name: 'CREATEDBY', value: info.createdBy },
-    { name: 'UPDATEDAT', value: formatDate(info.updatedAt) },
-    { name: 'UPDATEDBY', value: info.updatedBy },
-    { name: 'URL', value: info.url },
-    { name: 'OBS1', value: info.obs1 },
-    { name: 'OBS2', value: info.obs2 },
-    { name: 'OBS3', value: info.obs3 },
-    { name: 'LICENSE', value: info.license },
-    { name: 'LOGO10', value: '' }
-  ]
-
-  // Add logo lines to fields
+  const allFields: { [key: string]: string } = {
+    FILENAME: info.filename,
+    AUTHOR: info.author,
+    CREATEDAT: formatDate(info.createdAt),
+    CREATEDBY: info.createdBy,
+    UPDATEDAT: formatDate(info.updatedAt),
+    UPDATEDBY: info.updatedBy,
+    URL: info.url,
+    OBS1: info.obs1,
+    OBS2: info.obs2,
+    OBS3: info.obs3,
+    LICENSE: info.license
+  }
   for (let i = 0; i <= 10; i++) {
-    fields.push({ name: `LOGO${i}`, value: logo[i] || ' ' })
+    allFields[`LOGO${i}`] = logo[i] || ' '
   }
 
-  return fields.reduce((header, field) =>
-    setFieldValue(header, field.name, field.value),
-    template)
+  // Sort keys by length descending to avoid partial matches (LOGO1 vs LOGO10)
+  const keys = Object.keys(allFields).sort((a, b) => b.length - a.length)
+
+  for (const key of keys) {
+    const regex = new RegExp(`\\$${key}(?![0-9])_*`, 'g')
+    template = template.replace(regex, (match) => pad(allFields[key], match.length))
+  }
+
+  return template
 }
 
-export const renderLittleHeader = (languageId: string, info: littleHeaderInfo) => [
-  { name: 'FILENAME', value: info.filename },
-  { name: 'PROJECT', value : info.project },
-  { name: 'CREATEDAT', value: formatDate(info.createdAt) },
-  { name: 'CREATEDBY', value: info.createdBy },
-  { name: 'UPDATEDAT', value: formatDate(info.updatedAt) },
-  { name: 'UPDATEDBY', value: info.updatedBy },
-].reduce((header, field) =>
-  setLittleFieldValue(header, field.name, field.value),
-  getLittleTemplate(languageId))
+export const renderLittleHeader = (languageId: string, info: littleHeaderInfo) => {
+  let template = getLittleTemplate(languageId)
+  const allFields: { [key: string]: string } = {
+    FILENAME: info.filename,
+    PROJECT: info.project,
+    CREATEDAT: formatDate(info.createdAt),
+    CREATEDBY: info.createdBy,
+    UPDATEDAT: formatDate(info.updatedAt),
+    UPDATEDBY: info.updatedBy,
+  }
+
+  const keys = Object.keys(allFields).sort((a, b) => b.length - a.length)
+  for (const key of keys) {
+    const regex = new RegExp(`\\$${key}(?![0-9])_*`, 'g')
+    template = template.replace(regex, (match) => pad(allFields[key], match.length))
+  }
+
+  return template
+}

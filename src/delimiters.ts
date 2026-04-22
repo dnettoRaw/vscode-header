@@ -11,7 +11,7 @@ import vscode = require('vscode')
 
 const hashes = ['# ', ' #']
 const slashes = ['/* ', ' */']
-const doubleSlashes = ['// ', ' //']
+const doubleSlashes = ['// ', '']
 const semicolons = [';; ', ' ;;']
 const parens = ['(* ', ' *)']
 const dashes = ['-- ', ' --']
