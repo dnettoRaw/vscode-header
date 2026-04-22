@@ -351,6 +351,7 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
 
   for (const key of keys) {
     const regex = new RegExp(`\\$${key}(?![A-Z0-9])_*`, 'g')
+
     template = template.replace(regex, (match) => pad(allFields[key], match.length))
   }
 
