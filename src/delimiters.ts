@@ -19,7 +19,7 @@ const percents = ['%% ', ' %%']
 const xmlStyle = ['<!-- ', ' -->']
 
 export const languageDemiliters: { [lang: string]: string[] | undefined } = {
-  'c': slashes,
+  'c': doubleSlashes,
   'coffeescript': hashes,
   'cpp': doubleSlashes,
   'css': slashes,

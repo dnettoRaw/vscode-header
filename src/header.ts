@@ -41,18 +41,18 @@ export type littleHeaderInfo = {
 
 const genericTemplate = `
 ********************************************************************************
-*                                                                              *
-*   $FILENAME__________________________________        $LOGO0_________________ *
-*                                                      $LOGO1_________________ *
-*   By: $AUTHOR________________________________        $LOGO2_________________ *
-*                                                      $LOGO3_________________ *
-*   obs: $OBS1_________________________________        $LOGO4_________________ *
-*        $OBS2_________________________________        $LOGO5_________________ *
-*        $OBS3_________________________________        $LOGO6_________________ *
-*                                                      $LOGO7_________________ *
-*   Created: $CREATEDAT_________ by $CREATEDBY_        $LOGO8_________________ *
-*   Updated: $UPDATEDAT_________ by $UPDATEDBY_        $LOGO9_________________ *
-*   License: $LICENSE_________________________        $URL____________________ *
+*                                            $LOGO0___________________________ *
+*   $FILENAME___________                     $LOGO1___________________________ *
+*                                            $LOGO2___________________________ *
+*   By: $AUTHOR_________                     $LOGO3___________________________ *
+*                                            $LOGO4___________________________ *
+*   obs: $OBS1__________                     $LOGO5___________________________ *
+*        $OBS2__________                     $LOGO6___________________________ *
+*        $OBS3__________                     $LOGO7___________________________ *
+*                                            $LOGO8___________________________ *
+*   Created: $CREATEDAT_________ by $CREATEDBY_      $LOGO9___________________ *
+*   Updated: $UPDATEDAT_________ by $UPDATEDBY_      $LOGO10__________________ *
+*   License: $LICENSE_________________________      $URL______________________ *
 ********************************************************************************
 `.substring(1)
 
@@ -285,7 +285,8 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
     { name: 'OBS1', value: info.obs1 },
     { name: 'OBS2', value: info.obs2 },
     { name: 'OBS3', value: info.obs3 },
-    { name: 'LICENSE', value: info.license }
+    { name: 'LICENSE', value: info.license },
+    { name: 'LOGO10', value: '' }
   ]
 
   // Add logo lines to fields
