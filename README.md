@@ -24,58 +24,63 @@
 
 ### Standard Header (New Open-Ended Style)
 ```javascript
-// ////////////////////////////////////////////////////////////////////////////////
-//  #####                     Untitled-1
-//  ############              By: dnettoRaw <contact@dnetto.dev>
-//  ###          ###
-//  ##    ##  ##    ##        Created: 2026/04/22 13:30:00 by dnettoRaw
-//        ##  ##              Updated: 2026/04/22 13:30:00 by dnettoRaw
-//
-//  ##    ##  ##    ##        obs: "Modern header management"
-//  ###  ######  ###
-//  #####    ####             License: MIT   https://dnetto.dev
-// ////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////
+//          #####              Untitled-1                                    
+//       ############          By: dnettoRaw <contact@dnetto.dev>            
+//     ###          ###     
+//    ##    ##  ##    ##       Created: 2026/04/22 13:30:00 by dnettoRaw   
+//          ##  ##             Updated: 2026/04/22 13:30:00 by dnettoRaw   
+//                          
+//    ##    ##  ##    ##       obs: Modern header management                 
+//     ###  ######  ###                                                      
+//      #####    ####                                                        
+//                     
+//                           License: MIT                 https://dnetto.dev
+// //////////////////////////////////////////////////////////////////////////
 ```
 
 ### Little Header (Compact Version)
 ```javascript
-// ********************************************************************************
-//  #####                     F: index.ts
-//  ############              P: my-project
-//  ###          ###          C: 2026/04/22 13:30:00 by dnettoRaw
-//  ##    ##  ##    ##        U: 2026/04/22 13:30:00 by dnettoRaw
-//        ##  ##
-//
-//  ##    ##  ##    ##
-// ********************************************************************************
+// //////////////////////////////////////////////////////////////////////////
+//      #######        F: index.ts                                           
+//   ###       ###     P: my-project                                         
+//  ##   ## ##   ##    C: 2026/04/22 13:30:00 by: dnettoRaw                  
+//       ## ##         U: 2026/04/22 13:30:00 by: dnettoRaw                  
+//                  
+//  ##   ## ##   ## 
+//    ###########   
+// //////////////////////////////////////////////////////////////////////////
 ```
 
 ---
 
 ## 🛠️ How to Customize
 
-### 1. Change the Logo
-You can choose a built-in logo or provide your own:
-- Go to `Settings` > Search for `header.logoType`.
-- Options: `default`, `linux`, `vscode`, `max`.
-- To use your own art, paste it into `header.logo` (use `\n` for new lines).
+### 1. Built-in Logos
+You can quickly switch between built-in logos in your settings:
+- `header.logoType`: `default`, `linux`, `vscode`, `max`.
 
-### 2. Create a Custom Template
-If you want to change the whole layout, use `header.template`:
+### 2. Custom ASCII Art
+Paste your own ASCII art into `header.logo`.
+> **Note**: For best results with the default template, use a logo around 30x11 characters.
+
+### 3. Custom Templates
+You can redefine the entire header structure using `header.template`.
+**Example:**
 ```json
-"header.template": "/* $FILENAME\n * Autor: $USER\n * Criado em: $CREATED\n */"
+"header.template": "/* $FILENAME\n * Created by: $CREATED\n */"
 ```
 
-### 3. Available Variables
+### 4. Available Variables
 | Variable | Description |
 | :--- | :--- |
 | `$FILENAME` | Name of the current file |
 | `$PROJECT` | Project name from `package.json` |
-| `$AUTHOR` | Full name and email |
-| `$USER` | Just the username |
-| `$MAIL` | Just the email address |
-| `$CREATED` | Date of creation |
-| `$UPDATED` | Date of last update |
+| `$AUTHOR` | Full name and email (`Name <email>`) |
+| `$CREATED` | Name of the creator (alias for `$CREATEDBY`) |
+| `$UPDATED` | Name of the last updater (alias for `$UPDATEDBY`) |
+| `$CREATEDAT`| Date of creation (`YYYY/MM/DD HH:mm:ss`) |
+| `$UPDATEDAT`| Date of last update (`YYYY/MM/DD HH:mm:ss`) |
 | `$LICENSE` | Current license type |
 | `$URL` | Project or personal URL |
 | `$LOGO0`..`$LOGO10` | Lines of the full logo |

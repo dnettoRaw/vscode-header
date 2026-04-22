@@ -44,8 +44,8 @@ const genericTemplate = `
 *  $LOGO0_________________   $FILENAME________________________________________
 *  $LOGO1_________________   By: $AUTHOR______________________________________
 *  $LOGO2_________________
-*  $LOGO3_________________   Created: $CREATEDAT_________ by $CREATEDBY_
-*  $LOGO4_________________   Updated: $UPDATEDAT_________ by $UPDATEDBY_
+*  $LOGO3_________________   Created: $CREATEDAT_________ by $CREATED_______
+*  $LOGO4_________________   Updated: $UPDATEDAT_________ by $UPDATED_______
 *  $LOGO5_________________
 *  $LOGO6_________________   obs: $OBS1_______________________________________
 *  $LOGO7_________________        $OBS2_______________________________________
@@ -330,20 +330,20 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
     OBS3: info.obs3,
     LICENSE: info.license,
     // Aliases
-    CREATED: formatDate(info.createdAt),
-    UPDATED: formatDate(info.updatedAt),
+    DATE: formatDate(info.createdAt),
+    CREATED: info.createdBy,
+    UPDATED: info.updatedBy,
     USER: info.createdBy,
     MAIL: info.author.match(/<(.*)>/)?.[1] || info.author
   }
   for (let i = 0; i <= 10; i++) {
     allFields[`LOGO${i}`] = logo[i] || ' '
   }
-
   // Sort keys by length descending to avoid partial matches (LOGO1 vs LOGO10)
   const keys = Object.keys(allFields).sort((a, b) => b.length - a.length)
 
   for (const key of keys) {
-    const regex = new RegExp(`\\$${key}(?![0-9])_*`, 'g')
+    const regex = new RegExp(`\\$${key}(?![A-Z0-9])_*`, 'g')
     template = template.replace(regex, (match) => pad(allFields[key], match.length))
   }
 
@@ -369,7 +369,7 @@ export const renderLittleHeader = (languageId: string, info: littleHeaderInfo) =
 
   const keys = Object.keys(allFields).sort((a, b) => b.length - a.length)
   for (const key of keys) {
-    const regex = new RegExp(`\\$${key}(?![0-9])_*`, 'g')
+    const regex = new RegExp(`\\$${key}(?![A-Z0-9])_*`, 'g')
     template = template.replace(regex, (match) => pad(allFields[key], match.length))
   }
 
