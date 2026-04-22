@@ -1,119 +1,100 @@
-<h1 align="center"><img
-  src="https://raw.githubusercontent.com/dnettoRaw/vscode-header/master/img/logo.png" 
-  width=200></h1>
-# Header for VSCode
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/dnettoRaw/vscode-header/master/img/logo.png" width="200">
+  <br>VS Code Header
+</h1>
 
-This extension provides the header integration in VS Code.
+<p align="center">
+  <strong>Modern, premium, and fully customizable file headers for Visual Studio Code.</strong>
+</p>
 
-```bash
-# **************************************************************************** #
-#                                                                             */
-#    vscode-header                                            #####           */
-#                                                          ############       */
-#    By: dnettoRaw <hello@dnettoraw.dev>                 ###          ###     */
-#                                                       ##    ##  ##    ##    */
-#    obs: "even if you don't believe them,                    ##  ##          */
-#          they believe you."                                                 */
-#                        -A demon told me               ##    ##  ##   ##     */
-#                                                        ###  ######  ###     */
-#    Created: 2022/03/20 21:21:42 by dnettoRaw            #####    ####       */
-#    Updated: 2022/05/19 21:21:42 by dnettoRaw                                */
-#                                                     dnetto.dev              */
-# **************************************************************************** #
+---
+
+## ✨ Features
+
+- **Modern Design**: Premium "open-ended" header style for modern languages (`//`).
+- **Dynamic ASCII Art**: Built-in logos (Linux, VS Code) and support for custom ASCII art.
+- **Smart Fields**: Automatic detection of filename, project name (from `package.json`), Git user, and timestamps.
+- **Auto-Injection**: Automatically inserts headers into new files (configurable).
+- **On-Save Updates**: Keeps your "Updated" timestamp and user perfectly in sync.
+- **Fully Customizable**: Define your own templates and logo layouts.
+
+---
+
+## 🎨 Header Examples
+
+### Standard Header (New Open-Ended Style)
+```javascript
+// ////////////////////////////////////////////////////////////////////////////////
+//                #####     Untitled-1
+//             ############ By: dnettoRaw <contact@dnetto.dev>
+//           ###          ###
+//          ##    ##  ##    ##  Created: 2026/04/22 13:30:00 by dnettoRaw
+//                ##  ##        Updated: 2026/04/22 13:30:00 by dnettoRaw
+//
+//          ##    ##  ##    ##  obs: "Modern header management"
+//           ###  ######  ###
+//            #####    ####     License: MIT   https://dnetto.dev
+// ////////////////////////////////////////////////////////////////////////////////
 ```
 
-### soon little version for deps files
-```bash
-#       #######
-#    ###       ###
-#   ##   ## ##   ##  F: vscode-header.js
-#        ## ##       P: vscode-header
-#                    C: 2022/03/20 21:21:42 by dnettoRaw
-#   ##   ## ##   ##  U: 2022/05/19 21:21:42 by dnettoRaw
-#     ###########
-```
-|||
-|-|-|
-|F| file name|
-|P| project name|
-|C| created at|
-|U| updated at|
-
-## Usage
-
-### Insert a header
- - **macOS** : <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>H</kbd>
- - **Linux** / **Windows** : <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>H</kbd>.
-
-### Insert a little header
- - **macOS** : <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>j</kbd>
- - **Linux** / **Windows** : <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>j</kbd>.
-
-Header is automatically updated on save.
-
-
-## Configuration
-
-Default values for **username** and **email** are imported from environment variables.
-
-To override these values, specify these properties in *User Settings* :
-
-```ts
-{
-  "header.username": string,
-  "header.email": string,
-  "header.url" : string,
-  "header.autoInsert": boolean,
-  "header.logoType": "default" | "linux" | "vscode" | "max",
-  "header.template": string,
-  "header.littleTemplate": string
-}
+### Little Header (Compact Version)
+```javascript
+// ********************************************************************************
+//   #######     F: index.ts
+// ###     ###   P: my-project
+// ##  ###  ##   C: 2026/04/22 13:30:00 by dnettoRaw
+//     ###       U: 2026/04/22 13:30:00 by dnettoRaw
+// ********************************************************************************
 ```
 
-### Custom Templates Examples
+---
 
-You can fully customize your header by providing a template string. Use placeholders like `$FILENAME`, `$AUTHOR`, `$CREATED`, `$UPDATED`, `$MAIL`, `$LICENSE`, `$URL`, and `$LOGO0` to `$LOGO10`.
+## 🚀 Usage
 
-**Example Minimal Template:**
-```json
-"header.template": "/* $FILENAME\n * Created by: $USER on $CREATED\n * Contact: $MAIL\n */"
-```
+### Insert Full Header
+- **macOS**: `⌘` + `⌥` + `H`
+- **Linux / Windows**: `Ctrl` + `Alt` + `H`
 
-**Example Little Header Template:**
-```json
-"header.littleTemplate": "// $FILENAME - Project: $PROJECT\n// Last updated by $UPDATED"
-```
+### Insert Little Header
+- **macOS**: `⌘` + `⌥` + `J`
+- **Linux / Windows**: `Ctrl` + `Alt` + `J`
 
-# todo
- - [x] file name
- - [x] creator name
- - [x] modifier name
- - [x] creation date
- - [x] modifcation date
- - [x] observation 
-   - [x] observation show dialog in insert header
- - [x] web site 
-   - [x] auto add https
-   - [x] fix for very long sites url
- - [x] workflow publish relase
- - [x] little version of header
- - [x] custon logo by user
- - [x] versiion with only logo
- - [x] automatic git integration (name/email)
- - [x] license support (MIT, Apache, etc)
- - [x] dynamic delimiters via config
- - [x] automated tests suite
- - [x] bulk update headers in workspace
- - [x] snippets support
+### Automation
+- **Auto-Insert**: Headers are automatically added to new empty files (can be disabled in settings).
+- **Auto-Update**: Headers are updated every time you save the file.
 
+---
 
-## Issues
+## ⚙️ Configuration
 
-In case of a bug, or missing feature, please create a [Github Pull Request](https://github.com/dnettoRaw/vscode-header/pulls).
+Customize the extension behavior in your `settings.json`:
 
-## License
+| Setting | Type | Description |
+| :--- | :--- | :--- |
+| `header.username` | `string` | Your name (defaults to Git name) |
+| `header.email` | `string` | Your email (defaults to Git email) |
+| `header.url` | `string` | Your website or project URL |
+| `header.autoInsert` | `boolean` | Enable/Disable auto-insertion on new files |
+| `header.logoType` | `enum` | Built-in logos: `default`, `linux`, `vscode`, `max` |
+| `header.logo` | `string` | Custom ASCII art (multi-line) |
+| `header.template` | `string` | Custom full header structure |
+| `header.littleTemplate`| `string` | Custom little header structure |
 
-MIT
+### Custom Template Variables
+You can use these placeholders in your templates:
+- `$FILENAME`, `$PROJECT`
+- `$AUTHOR`, `$USER`, `$MAIL`
+- `$CREATED`, `$UPDATED`
+- `$LICENSE`, `$URL`
+- `$LOGO0` to `$LOGO10` (for full header)
+- `$LLOGO0` to `$LLOGO6` (for little header)
 
-## credits 
-[kube](https://github.com/kube)
+---
+
+## 📜 License
+
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+---
+
+<p align="center">Made with ❤️ by <strong>dnettoRaw</strong></p>
