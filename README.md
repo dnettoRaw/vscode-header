@@ -25,76 +25,73 @@
 ### Standard Header (New Open-Ended Style)
 ```javascript
 // ////////////////////////////////////////////////////////////////////////////////
-//                #####     Untitled-1
-//             ############ By: dnettoRaw <contact@dnetto.dev>
-//           ###          ###
-//          ##    ##  ##    ##  Created: 2026/04/22 13:30:00 by dnettoRaw
-//                ##  ##        Updated: 2026/04/22 13:30:00 by dnettoRaw
+//  #####                     Untitled-1
+//  ############              By: dnettoRaw <contact@dnetto.dev>
+//  ###          ###
+//  ##    ##  ##    ##        Created: 2026/04/22 13:30:00 by dnettoRaw
+//        ##  ##              Updated: 2026/04/22 13:30:00 by dnettoRaw
 //
-//          ##    ##  ##    ##  obs: "Modern header management"
-//           ###  ######  ###
-//            #####    ####     License: MIT   https://dnetto.dev
+//  ##    ##  ##    ##        obs: "Modern header management"
+//  ###  ######  ###
+//  #####    ####             License: MIT   https://dnetto.dev
 // ////////////////////////////////////////////////////////////////////////////////
 ```
 
 ### Little Header (Compact Version)
 ```javascript
 // ********************************************************************************
-//   #######     F: index.ts
-// ###     ###   P: my-project
-// ##  ###  ##   C: 2026/04/22 13:30:00 by dnettoRaw
-//     ###       U: 2026/04/22 13:30:00 by dnettoRaw
+//  #####                     F: index.ts
+//  ############              P: my-project
+//  ###          ###          C: 2026/04/22 13:30:00 by dnettoRaw
+//  ##    ##  ##    ##        U: 2026/04/22 13:30:00 by dnettoRaw
+//        ##  ##
+//
+//  ##    ##  ##    ##
 // ********************************************************************************
 ```
 
 ---
 
-## 🚀 Usage
+## 🛠️ How to Customize
 
-### Insert Full Header
-- **macOS**: `⌘` + `⌥` + `H`
-- **Linux / Windows**: `Ctrl` + `Alt` + `H`
+### 1. Change the Logo
+You can choose a built-in logo or provide your own:
+- Go to `Settings` > Search for `header.logoType`.
+- Options: `default`, `linux`, `vscode`, `max`.
+- To use your own art, paste it into `header.logo` (use `\n` for new lines).
 
-### Insert Little Header
-- **macOS**: `⌘` + `⌥` + `J`
-- **Linux / Windows**: `Ctrl` + `Alt` + `J`
+### 2. Create a Custom Template
+If you want to change the whole layout, use `header.template`:
+```json
+"header.template": "/* $FILENAME\n * Autor: $USER\n * Criado em: $CREATED\n */"
+```
 
-### Automation
-- **Auto-Insert**: Headers are automatically added to new empty files (can be disabled in settings).
-- **Auto-Update**: Headers are updated every time you save the file.
+### 3. Available Variables
+| Variable | Description |
+| :--- | :--- |
+| `$FILENAME` | Name of the current file |
+| `$PROJECT` | Project name from `package.json` |
+| `$AUTHOR` | Full name and email |
+| `$USER` | Just the username |
+| `$MAIL` | Just the email address |
+| `$CREATED` | Date of creation |
+| `$UPDATED` | Date of last update |
+| `$LICENSE` | Current license type |
+| `$URL` | Project or personal URL |
+| `$LOGO0`..`$LOGO10` | Lines of the full logo |
+| `$LLOGO0`..`$LLOGO6` | Lines of the little logo |
 
 ---
 
-## ⚙️ Configuration
+## 🚀 Usage
 
-Customize the extension behavior in your `settings.json`:
-
-| Setting | Type | Description |
-| :--- | :--- | :--- |
-| `header.username` | `string` | Your name (defaults to Git name) |
-| `header.email` | `string` | Your email (defaults to Git email) |
-| `header.url` | `string` | Your website or project URL |
-| `header.autoInsert` | `boolean` | Enable/Disable auto-insertion on new files |
-| `header.logoType` | `enum` | Built-in logos: `default`, `linux`, `vscode`, `max` |
-| `header.logo` | `string` | Custom ASCII art (multi-line) |
-| `header.template` | `string` | Custom full header structure |
-| `header.littleTemplate`| `string` | Custom little header structure |
-
-### Custom Template Variables
-You can use these placeholders in your templates:
-- `$FILENAME`, `$PROJECT`
-- `$AUTHOR`, `$USER`, `$MAIL`
-- `$CREATED`, `$UPDATED`
-- `$LICENSE`, `$URL`
-- `$LOGO0` to `$LOGO10` (for full header)
-- `$LLOGO0` to `$LLOGO6` (for little header)
+### Commands
+- **Insert Full Header**: `⌘` + `⌥` + `H` (macOS) or `Ctrl` + `Alt` + `H` (Windows/Linux)
+- **Insert Little Header**: `⌘` + `⌥` + `J` (macOS) or `Ctrl` + `Alt` + `J` (Windows/Linux)
 
 ---
 
 ## 📜 License
-
 Distributed under the **MIT License**. See `LICENSE` for more information.
-
----
 
 <p align="center">Made with ❤️ by <strong>dnettoRaw</strong></p>
