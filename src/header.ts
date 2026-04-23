@@ -1,19 +1,23 @@
-// //////////////////////////////////////////////////////////////////////////
-//      #######        F: header.ts                                          
-//   ###       ###     P: dr-header                                          
-//  ##   ## ##   ##    C: Invalid date        by: 22/06/15 15:23:17 by:dnettoRaw
-//       ## ##         U: 2026/04/22 17:26:57 by: dnettoRaw                  
-//                  
-//  ##   ## ##   ## 
-//    ###########   
-// //////////////////////////////////////////////////////////////////////////
+// =============================================================================
+//        #######     
+//     ###       ###     F: header.ts
+//    ##   ## ##   ##    P: dr-header
+//         ## ##      
+//                       C: 2026/04/23 10:00:00 by dnettoRaw
+//    ##   ## ##   ##    U: 2026/04/23 12:15:00 by dnettoRaw
+//      ###########   
+// =============================================================================
 
 import moment = require('moment')
 import vscode = require('vscode')
+import path = require('path')
 import { getLanguageDelimiters } from './delimiters'
 
 export type HeaderInfo = {
   filename: string,
+  project: string,
+  version: string,
+  since: string,
   author: string,
   createdBy: string,
   createdAt: moment.Moment,
@@ -29,6 +33,8 @@ export type HeaderInfo = {
 export type littleHeaderInfo = {
   filename: string,
   project: string,
+  version: string,
+  since: string,
   createdBy: string,
   createdAt: moment.Moment,
   updatedBy: string,
@@ -42,12 +48,12 @@ export type littleHeaderInfo = {
 
 const genericTemplate = `
 ********************************************************************************
-*  $LOGO0_________________   $FILENAME________________________________________
-*  $LOGO1_________________   By: $AUTHOR______________________________________
+*  $LOGO0_________________   filename: $FILENAME________________________________
+*  $LOGO1_________________   Project : $PROJECT_________________________________
 *  $LOGO2_________________
 *  $LOGO3_________________   Created: $CREATEDAT_________ by $CREATED_______
 *  $LOGO4_________________   Updated: $UPDATEDAT_________ by $UPDATED_______
-*  $LOGO5_________________
+*  $LOGO5_________________   Since  : $SINCE____________________________________
 *  $LOGO6_________________   obs: $OBS1_______________________________________
 *  $LOGO7_________________        $OBS2_______________________________________
 *  $LOGO8_________________        $OBS3_______________________________________
@@ -61,13 +67,13 @@ const genericTemplate = `
  */
 const littleTemplate = `
 ********************************************************************************
-*  $LLOGO0________   F: $FILENAME_____________________________________________
-*  $LLOGO1________   P: $PROJECT______________________________________________
-*  $LLOGO2________   C: $CREATEDAT_________ by: $CREATEDBY____________________
-*  $LLOGO3________   U: $UPDATEDAT_________ by: $UPDATEDBY____________________
-*  $LLOGO4________
-*  $LLOGO5________
-*  $LLOGO6________
+*  $LLOGO0________
+*  $LLOGO1________   F: $FILENAME_____________________________________________
+*  $LLOGO2________   P: $PROJECT______________________________________________
+*  $LLOGO3________
+*  $LLOGO4________   C: $CREATEDAT_________ by $CREATED_______________________
+*  $LLOGO5________   U: $UPDATEDAT_________ by $UPDATED_______________________
+*  $LLOGO6________   S: $SINCE________________________________________________
 ********************************************************************************
 `.substring(1)
 
@@ -160,6 +166,23 @@ const getMaxLogo = () => [
 ]
 
 const getCustomLogo = () => {
+  // 1. Try "logo" file in workspace root
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (workspaceFolders && workspaceFolders.length > 0) {
+    try {
+      const logoPath = path.join(workspaceFolders[0].uri.fsPath, 'logo');
+      const fs = require('fs');
+      if (fs.existsSync(logoPath)) {
+        const content = fs.readFileSync(logoPath, 'utf8');
+        const lines = content.split(/\r?\n/).slice(0, 11);
+        return lines.map((line: string) => {
+          const trimmed = line.substring(0, 30);
+          return trimmed + ' '.repeat(Math.max(0, 30 - trimmed.length));
+        });
+      }
+    } catch (_) { }
+  }
+
   const config = vscode.workspace.getConfiguration()
   const customLogo = config.get('header.logo') as string
   if (customLogo) {
@@ -181,24 +204,28 @@ const getCustomLogo = () => {
  */
 const applyDelimitersToTemplate = (template: string, left: string, right: string) => {
   const lines = template.split('\n')
-  
+
   return lines.map((line) => {
     if (line.length === 0) return line
-    if (!line.includes('*')) return line
-    
+
     // For lines that are all asterisks (border lines), create a border with delimiters
     if (/^\*+$/.test(line)) {
-      const fillChar = left.charAt(0)
-      const fillLength = Math.max(1, 40 - (left.length + right.length) / 2)
-      return left + fillChar.repeat(Math.floor(fillLength)) + right
+      const trimmedLeft = left.trim()
+      const fillChar = '='
+      const fillLength = line.length - left.length - right.length
+      return left + fillChar.repeat(Math.max(0, fillLength)) + right
     }
-    
-    // For content lines with asterisks, extract content between borders and preserve it
-    if (line.startsWith('*') && line.endsWith('*')) {
-      const content = line.substring(1, line.length - 1)
+
+    // For content lines starting with asterisk
+    if (line.startsWith('*')) {
+      const hasEndStar = line.endsWith('*')
+      const content = hasEndStar
+        ? line.substring(1, line.length - 1)
+        : line.substring(1)
+
       return left + content + right
     }
-    
+
     return line
   }).join('\n')
 }
@@ -263,16 +290,27 @@ export const supportsLanguage = (languageId: string) =>
  * Returns current header text if present at top of document
  */
 export const extractHeader = (text: string): string | null => {
-  const headerRegex = `^(.{80}(\r\n|\n)){13}`
-  const match = text.match(headerRegex)
+  const lines = text.split(/\r?\n/).slice(0, 13)
+  if (lines.length < 13) return null
+  const header = lines.join('\n')
 
-  return match ? match[0].split('\r\n').join('\n') : null
+  // Flexible check for main header: must contain Created or Updated
+  if (/created:|updated:/i.test(header)) {
+    return header
+  }
+  return null
 }
-export const extractLittleHeader = (text: string): string | null => {
-  const headerRegex = `^(.{64}(\r\n|\n)){7}`
-  const match = text.match(headerRegex)
 
-  return match ? match[0].split('\r\n').join('\n') : null
+export const extractLittleHeader = (text: string): string | null => {
+  const lines = text.split(/\r?\n/).slice(0, 9)
+  if (lines.length < 9) return null
+  const header = lines.join('\n')
+
+  // Flexible check for little header: must contain C: or U: 
+  if (/\b[CU]: /i.test(header)) {
+    return header
+  }
+  return null
 }
 
 /**
@@ -283,11 +321,26 @@ const getFieldValue = (header: string, name: string) => {
   const customTemplate = config.get('header.template') as string
   const template = customTemplate || genericTemplate
 
-  const match = template.match(new RegExp(`\\$${name}(?![0-9])_*`))
-  if (!match) return ''
+  const templateLines = template.split('\n')
+  const headerLines = header.split('\n')
 
-  const offset = template.indexOf(match[0])
-  return header.substr(offset, match[0].length).trim()
+  const fieldMarker = `$${name}`
+  for (let i = 0; i < templateLines.length; i++) {
+    const tLine = templateLines[i]
+    if (tLine.includes(fieldMarker)) {
+      const hLine = headerLines[i]
+      if (!hLine) continue
+
+      const match = tLine.match(new RegExp(`\\$${name}(?![A-Z0-9])_*`))
+      if (match) {
+        const offset = tLine.indexOf(match[0])
+        const value = hLine.substr(offset, match[0].length).trim()
+        // Clean up accidental label capture (recursive, handles common prefixes like 'by')
+        return value.replace(/^([a-zA-Z0-9\s]+:|\bby\b|\bfrom\b|\s|:)+/i, '').trim()
+      }
+    }
+  }
+  return ''
 }
 
 const getLittleFieldValue = (header: string, name: string) => {
@@ -295,37 +348,87 @@ const getLittleFieldValue = (header: string, name: string) => {
   const customTemplate = config.get('header.littleTemplate') as string
   const template = customTemplate || littleTemplate
 
-  const match = template.match(new RegExp(`\\$${name}(?![0-9])_*`))
-  if (!match) return ''
-  const offset = template.indexOf(match[0])
-  return header.substr(offset, match[0].length).trim()
+  const templateLines = template.split('\n')
+  const headerLines = header.split('\n')
+
+  const fieldMarker = `$${name}`
+  for (let i = 0; i < templateLines.length; i++) {
+    const tLine = templateLines[i]
+    if (tLine.includes(fieldMarker)) {
+      const hLine = headerLines[i]
+      if (!hLine) continue
+
+      const match = tLine.match(new RegExp(`\\$${name}(?![A-Z0-9])_*`))
+      if (match) {
+        const offset = tLine.indexOf(match[0])
+        const value = hLine.substr(offset, match[0].length).trim()
+        // Clean up accidental label capture (recursive, handles common prefixes like 'by')
+        return value.replace(/^([a-zA-Z0-9\s]+:|\bby\b|\bfrom\b|\s|:)+/i, '').trim()
+      }
+    }
+  }
+  return ''
+}
+
+/**
+ * Strips language-specific delimiters from a header to match template format
+ */
+const stripDelimiters = (header: string, languageId: string) => {
+  const delimiters = getLanguageDelimiters(languageId)
+  if (!delimiters) return header
+  const [left, right] = delimiters
+
+  return header.split('\n').map(line => {
+    if (line.startsWith(left)) {
+      let content = line.substring(left.length)
+      if (right && content.endsWith(right)) {
+        content = content.substring(0, content.length - right.length)
+      }
+      // Maintain same length as left delimiter by padding with spaces after *
+      return '*' + ' '.repeat(Math.max(0, left.length - 1)) + content
+    }
+    return line
+  }).join('\n')
 }
 
 /**
  * Extract header info from header string
  */
-export const getHeaderInfo = (header: string): HeaderInfo => ({
-  filename: getFieldValue(header, 'FILENAME'),
-  author: getFieldValue(header, 'AUTHOR'),
-  createdBy: getFieldValue(header, 'CREATEDBY'),
-  createdAt: parseDate(getFieldValue(header, 'CREATEDAT')),
-  updatedBy: getFieldValue(header, 'UPDATEDBY'),
-  updatedAt: parseDate(getFieldValue(header, 'UPDATEDAT')),
-  url: getFieldValue(header, 'URL'),
-  obs1: getFieldValue(header, 'OBS1'),
-  obs2: getFieldValue(header, 'OBS2'),
-  obs3: getFieldValue(header, 'OBS3'),
-  license: getFieldValue(header, 'LICENSE')
-})
+export const getHeaderInfo = (header: string, languageId: string): HeaderInfo => {
+  const normalizedHeader = stripDelimiters(header, languageId)
 
-export const getLittleHeaderInfo = (header: string): littleHeaderInfo => ({
-  filename: getLittleFieldValue(header, 'FILENAME'),
-  project: getLittleFieldValue(header, 'PROJECT'),
-  createdBy: getLittleFieldValue(header, 'CREATEDBY'),
-  createdAt: parseDate(getLittleFieldValue(header, 'CREATEDAT')),
-  updatedBy: getLittleFieldValue(header, 'UPDATEDBY'),
-  updatedAt: parseDate(getLittleFieldValue(header, 'UPDATEDAT')),
-})
+  return {
+    filename: getFieldValue(normalizedHeader, 'FILENAME'),
+    project: getFieldValue(normalizedHeader, 'PROJECT'),
+    version: getFieldValue(normalizedHeader, 'VERSION'),
+    since: getFieldValue(normalizedHeader, 'SINCE'),
+    author: getFieldValue(normalizedHeader, 'AUTHOR'),
+    createdBy: getFieldValue(normalizedHeader, 'CREATEDBY') || getFieldValue(normalizedHeader, 'CREATED'),
+    createdAt: parseDate(getFieldValue(normalizedHeader, 'CREATEDAT')),
+    updatedBy: getFieldValue(normalizedHeader, 'UPDATEDBY') || getFieldValue(normalizedHeader, 'UPDATED'),
+    updatedAt: parseDate(getFieldValue(normalizedHeader, 'UPDATEDAT')),
+    url: getFieldValue(normalizedHeader, 'URL'),
+    obs1: getFieldValue(normalizedHeader, 'OBS1'),
+    obs2: getFieldValue(normalizedHeader, 'OBS2'),
+    obs3: getFieldValue(normalizedHeader, 'OBS3'),
+    license: getFieldValue(normalizedHeader, 'LICENSE')
+  }
+}
+
+export const getLittleHeaderInfo = (header: string, languageId: string): littleHeaderInfo => {
+  const normalizedHeader = stripDelimiters(header, languageId)
+
+  return {
+    filename: getLittleFieldValue(normalizedHeader, 'FILENAME'),
+    project: getLittleFieldValue(normalizedHeader, 'PROJECT'),
+    version: getLittleFieldValue(normalizedHeader, 'VERSION'),
+    since: getLittleFieldValue(normalizedHeader, 'SINCE'),
+    createdBy: getLittleFieldValue(normalizedHeader, 'CREATED') || getLittleFieldValue(normalizedHeader, 'CREATEDBY'),
+    createdAt: parseDate(getLittleFieldValue(normalizedHeader, 'CREATEDAT')),
+    updatedBy: getLittleFieldValue(normalizedHeader, 'UPDATED') || getLittleFieldValue(normalizedHeader, 'UPDATEDBY'),
+    updatedAt: parseDate(getLittleFieldValue(normalizedHeader, 'UPDATEDAT')),
+  }
+}
 
 /**
  * Renders a language template with header info
@@ -336,6 +439,9 @@ export const renderHeader = (languageId: string, info: HeaderInfo, logoOnly: boo
 
   const allFields: { [key: string]: string } = {
     FILENAME: info.filename,
+    PROJECT: info.project,
+    VERSION: info.version,
+    SINCE: info.since,
     AUTHOR: info.author,
     CREATEDAT: formatDate(info.createdAt),
     CREATEDBY: info.createdBy,
@@ -374,10 +480,14 @@ export const renderLittleHeader = (languageId: string, info: littleHeaderInfo) =
   const allFields: { [key: string]: string } = {
     FILENAME: info.filename,
     PROJECT: info.project,
+    VERSION: info.version,
+    SINCE: info.since,
     CREATEDAT: formatDate(info.createdAt),
     CREATEDBY: info.createdBy,
+    CREATED: info.createdBy,
     UPDATEDAT: formatDate(info.updatedAt),
     UPDATEDBY: info.updatedBy,
+    UPDATED: info.updatedBy,
   }
 
   // Add little logo lines
