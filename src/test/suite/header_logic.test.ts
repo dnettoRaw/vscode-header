@@ -50,8 +50,7 @@ suite('Header Logic Unit Tests', () => {
 
     test('should apply delimiters correctly to borders', () => {
         const renderedPython = renderHeader('python', dummyInfo)
-        // Python uses # delimiters: ['# ', ' #']
-        // Template is 80 chars, so border is '# ' + '='*76 + ' #'
-        assert.ok(renderedPython.startsWith('# ' + '='.repeat(76) + ' #'))
+        // Borders now use equals signs regardless of language
+        assert.ok(renderedPython.startsWith('='.repeat(80)))
     })
 })

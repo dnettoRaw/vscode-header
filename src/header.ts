@@ -208,12 +208,9 @@ const applyDelimitersToTemplate = (template: string, left: string, right: string
   return lines.map((line) => {
     if (line.length === 0) return line
 
-    // For lines that are all asterisks (border lines), create a border with delimiters
+    // For lines that are all asterisks (border lines), create a border with equals signs
     if (/^\*+$/.test(line)) {
-      const trimmedLeft = left.trim()
-      const fillChar = '='
-      const fillLength = line.length - left.length - right.length
-      return left + fillChar.repeat(Math.max(0, fillLength)) + right
+      return '='.repeat(line.length)
     }
 
     // For content lines starting with asterisk
